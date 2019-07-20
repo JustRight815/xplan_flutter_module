@@ -4,6 +4,7 @@
 
 #import "GeneratedPluginRegistrant.h"
 #import <flutter_webview_plugin/FlutterWebviewPlugin.h>
+#import <fluttertoast/FluttertoastPlugin.h>
 #import <path_provider/PathProviderPlugin.h>
 #import <sqflite/SqflitePlugin.h>
 
@@ -11,6 +12,7 @@
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
   [FlutterWebviewPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterWebviewPlugin"]];
+  [FluttertoastPlugin registerWithRegistrar:[registry registrarForPlugin:@"FluttertoastPlugin"]];
   [FLTPathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPathProviderPlugin"]];
   [SqflitePlugin registerWithRegistrar:[registry registrarForPlugin:@"SqflitePlugin"]];
 }

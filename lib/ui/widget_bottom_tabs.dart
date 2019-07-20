@@ -24,26 +24,26 @@ class _BottomTabsState extends State<BottomTabs> {
   @override
   Widget build(BuildContext context) {
     var _bottomTabs = <BottomNavigationBarItem>[
-      ///最新
+      ///视频
       BottomNavigationBarItem(
         icon: getTabIcon(0),
         title: Text(AppStrings.video),
       ),
 
-      ///分类
+      ///图片
       BottomNavigationBarItem(
         icon: getTabIcon(1),
         title:
             Text(AppStrings.picture),
       ),
 
-      ///妹纸
+      ///头条
       BottomNavigationBarItem(
         icon: getTabIcon(2),
         title: Text(AppStrings.toutiao),
       ),
 
-      ///收藏
+      ///设置
       BottomNavigationBarItem(
         icon: getTabIcon(3),
         title:
