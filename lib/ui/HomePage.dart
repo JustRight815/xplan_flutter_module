@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xplan_flutter/constant/AppStrings.dart';
 import 'package:xplan_flutter/ui/NewsPage.dart';
 import 'package:xplan_flutter/ui/PicturePage.dart';
 import 'package:xplan_flutter/ui/SettingPage.dart';
@@ -16,8 +17,8 @@ class HomePage extends StatefulWidget{
 
 class _HomePageState extends State<HomePage>{
   int _currentPageIndex = 0;
-  String _currentDate;
   PageController _pageController;
+  var appBarTitles = [ AppStrings.video, AppStrings.picture, AppStrings.toutiao, AppStrings.setting];
 
   @override
   void initState() {
@@ -40,13 +41,17 @@ class _HomePageState extends State<HomePage>{
     return AppBar(
       elevation: 5,
       centerTitle: true,
-      title: Offstage(
-        offstage: _currentPageIndex != 0,
-
-        ///标题栏显示当前日期
-        child: Text(_currentDate ?? ''),
-      )
+      title: Text(
+        getTitleText(),
+        style: new TextStyle(
+        color: Colors.white,
+        fontSize: 18.0,
+      ))
     );
+  }
+
+  String getTitleText(){
+    return appBarTitles[_currentPageIndex];
   }
 
   ///页面切换回调

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:xplan_flutter/common/util/StringUtil.dart';
 import 'package:xplan_flutter/model/VideoBean.dart';
 import 'WebLoadPage.dart';
 import 'SettingPage.dart';
@@ -58,6 +59,10 @@ class _GankListItemState extends State<GankListItem> {
                 children: <Widget>[
                   Container(
                     height: 200,
+                    color: Colors.grey,
+                  ),
+                  Container(
+                    height: 200,
                     decoration: new BoxDecoration(
                       shape: BoxShape.rectangle,
                       image: new DecorationImage(
@@ -110,7 +115,7 @@ class _GankListItemState extends State<GankListItem> {
                         Padding(
                           padding: const EdgeInsets.only(left: 1.0, top: 2),
                           child: Text(
-                            "视频时长：" + widget.gankItem.data.duration.toString(),
+                            "视频时长：" + StringUtil.generateTime(widget.gankItem.data.duration),
                             textAlign: TextAlign.left,
                             style: new TextStyle(
                               color: Colors.grey,
