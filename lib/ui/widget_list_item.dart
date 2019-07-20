@@ -22,10 +22,10 @@ class _GankListItemState extends State<GankListItem> {
           context,
           new MaterialPageRoute(
               builder: (context) =>
-                  SettingPage()
-//              new WebviewPage(
-//                  title: widget.gankItem.data.title,
-//                  url: widget.gankItem.data.webUrl.raw)
+//                  SettingPage()
+              new WebviewPage(
+                  title: widget.gankItem.data.title,
+                  url: widget.gankItem.data.webUrl.raw)
         ),
         );
       },
