@@ -1,11 +1,10 @@
 package io.flutter.plugins;
 
-import com.flutter_webview_plugin.FlutterWebviewPlugin;
-import com.tekartik.sqflite.SqflitePlugin;
-
 import io.flutter.plugin.common.PluginRegistry;
-import io.flutter.plugins.pathprovider.PathProviderPlugin;
+import com.flutter_webview_plugin.FlutterWebviewPlugin;
 import io.github.ponnamkarthik.toast.fluttertoast.FluttertoastPlugin;
+import io.flutter.plugins.pathprovider.PathProviderPlugin;
+import com.tekartik.sqflite.SqflitePlugin;
 
 /**
  * Generated file. Do not edit.
