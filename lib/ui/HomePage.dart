@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:xplan_flutter/constant/AppStrings.dart';
 import 'package:xplan_flutter/ui/NewsPage.dart';
-import 'package:xplan_flutter/ui/PicturePage.dart';
 import 'package:xplan_flutter/ui/SettingPage.dart';
-import 'package:xplan_flutter/ui/VideoPage.dart';
+import 'package:xplan_flutter/ui/picture/PicturePage.dart';
+import 'package:xplan_flutter/ui/video/VideoPage.dart';
 import 'package:xplan_flutter/ui/widget_bottom_tabs.dart';
 import 'package:xplan_flutter/widget/ToastUtil.dart';
 
