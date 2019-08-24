@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:xplan_flutter/model/common_model.dart';
 import 'package:xplan_flutter/ui/picture/widget/PictureGridItem.dart';
 import 'package:xplan_flutter/widget/cached_image.dart';
@@ -12,23 +14,20 @@ class PicturePage extends StatefulWidget {
   State<StatefulWidget> createState() => _PicturePageState();
 }
 
-class _PicturePageState extends State<PicturePage> {
+class _PicturePageState extends State<PicturePage> with AutomaticKeepAliveClientMixin{
   List<CommonModel> bannerList = []; //轮播图列表
   List<CommonModel> menuList = []; //菜单列表
-  List<CommonModel> gridList = []; //瀑布流图片列表
+  List<CommonModel> gridList = new List<CommonModel>(); //瀑布流图片列表
   ScrollController _scrollController = ScrollController();
+
+  bool _isLoading = true;
+  RefreshController _refreshController;
 
   @override
   void initState() {
+    _refreshController = new RefreshController();
     _initData();
     super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: _listView
-    );
   }
 
   @override
@@ -37,24 +36,96 @@ class _PicturePageState extends State<PicturePage> {
     super.dispose();
   }
 
-  void _initData() {
-    bannerList = new List<CommonModel>();
-    for (int i = 0; i < 5; i++) {
-      bannerList.add(new CommonModel(
-          icon: "https://m.360buyimg.com/mobilecms/s720x322_jfs/t4903/41/12296166/85214/15205dd6/58d92373N127109d8.jpg!q70.jpg"));
-    }
-    menuList = new List<CommonModel>();
-    menuList.add(new CommonModel(icon: "images/hone_menu_icon_0.png",title: "美食"));
-    menuList.add(new CommonModel(icon: "images/hone_menu_icon_0.png",title: "电影"));
-    menuList.add(new CommonModel(icon: "images/hone_menu_icon_0.png",title: "酒店"));
-    menuList.add(new CommonModel(icon: "images/hone_menu_icon_0.png",title: "酒店"));
-    menuList.add(new CommonModel(icon: "images/hone_menu_icon_0.png",title: "酒店"));
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      child: Stack(
+        children: <Widget>[
+          Offstage(
+            offstage: _isLoading,
+            child: SmartRefresher(
+                controller: _refreshController,
+                header: new ClassicHeader(
+                  failedText: '刷新失败!',
+                  completeText: '刷新完成!',
+                  releaseText: '释放可以刷新',
+                  idleText: '下拉刷新哦!',
+                  failedIcon: new Icon(Icons.clear, color: Colors.black),
+                  completeIcon: new Icon(Icons.done, color: Colors.black),
+                  idleIcon: new Icon(Icons.arrow_downward, color: Colors.black),
+                  releaseIcon: new Icon(
+                      Icons.arrow_upward, color: Colors.black),
+                  refreshingText: '正在刷新...',
+                  textStyle: Theme
+                      .of(context)
+                      .textTheme
+                      .body2,
+                ),
+                onRefresh: _onRefresh,
+                onLoading: _onLoading,
+                enablePullUp: true,
+                child: _listView
+            ),
+          ),
+          Offstage(
+            offstage: !_isLoading,
+            child: Center(
+              child: CupertinoActivityIndicator(),
+            ),
+          )
+        ],
+      ),
+    );
+  }
 
-    gridList = new List<CommonModel>();
-    for (int i = 0; i < 20; i++) {
-      gridList.add(
-          new CommonModel(icon: "https://m.360buyimg.com//mobilecms/s276x276_jfs/t3175/148/8125248346/324991/3a60c04b/58bfcea9Ne6a3b000.jpg!q70.jpg", title: "快来看妹子了"));
-    }
+  void _onRefresh() {
+    _initData();
+  }
+
+  void _onLoading() {
+    _initData(loadMore: true);
+  }
+
+  void _initData({bool loadMore = false}) {
+    Future.delayed(Duration(milliseconds: 500)).then((_) {
+      bannerList = new List<CommonModel>();
+      for (int i = 0; i < 5; i++) {
+        bannerList.add(new CommonModel(
+            icon: "https://m.360buyimg.com/mobilecms/s720x322_jfs/t4903/41/12296166/85214/15205dd6/58d92373N127109d8.jpg!q70.jpg"));
+      }
+      menuList = new List<CommonModel>();
+      menuList.add(
+          new CommonModel(icon: "images/hone_menu_icon_0.png", title: "美食"));
+      menuList.add(
+          new CommonModel(icon: "images/hone_menu_icon_0.png", title: "电影"));
+      menuList.add(
+          new CommonModel(icon: "images/hone_menu_icon_0.png", title: "酒店"));
+      menuList.add(
+          new CommonModel(icon: "images/hone_menu_icon_0.png", title: "酒店"));
+      menuList.add(
+          new CommonModel(icon: "images/hone_menu_icon_0.png", title: "酒店"));
+
+      List<CommonModel> list = new List<CommonModel>();
+      for (int i = 0; i < 20; i++) {
+        list.add(
+            new CommonModel(
+                icon: "https://m.360buyimg.com//mobilecms/s276x276_jfs/t3175/148/8125248346/324991/3a60c04b/58bfcea9Ne6a3b000.jpg!q70.jpg",
+                title: "快来看妹子了"));
+      }
+
+      if (loadMore) {
+        gridList.addAll(list);
+        _refreshController.loadComplete();
+      } else {
+        _refreshController.refreshCompleted();
+        gridList.clear();
+        gridList.addAll(list);
+      }
+      setState(() {
+        _isLoading = false;
+      });
+    });
   }
 
   //listView列表
@@ -87,7 +158,7 @@ class _PicturePageState extends State<PicturePage> {
               childCount: gridList.length,
             ),
           ),
-      ],
+        ],
       );
   }
 
@@ -126,6 +197,10 @@ class _PicturePageState extends State<PicturePage> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
 
 
