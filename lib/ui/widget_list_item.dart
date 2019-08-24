@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:xplan_flutter/common/util/StringUtil.dart';
 import 'package:xplan_flutter/model/VideoBean.dart';
 import 'WebLoadPage.dart';
-import 'SettingPage.dart';
 
 class GankListItem extends StatefulWidget {
   final ItemList gankItem;
