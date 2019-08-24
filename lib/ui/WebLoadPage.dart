@@ -1,41 +1,35 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
-///加载网页
 class WebviewPage extends StatefulWidget {
-  var title = "";
-  var url = "";
+  final String title;
+  final String url;
+
+  const WebviewPage({Key key, this.title, this.url}) : super(key: key);
 
   @override
-  _WebviewPageState createState() => _WebviewPageState();
-
-  WebviewPage({Key key, @required this.title, @required this.url})
-      : super(key: key);
+  State<StatefulWidget> createState() => WebviewPageState();
 }
 
-class _WebviewPageState extends State<WebviewPage> {
-  TextEditingController controller = TextEditingController();
-  FlutterWebviewPlugin flutterWebviewPlugin = FlutterWebviewPlugin();
-  var foregroundWidget = new Container(
-    alignment: AlignmentDirectional.center,
-    child: CircularProgressIndicator(),
-  );
-
-  launchUrl() {
-    setState(() {
-      widget.url = controller.text;
-      flutterWebviewPlugin.reloadUrl(widget.url);
-    });
-  }
+class WebviewPageState extends State<WebviewPage> {
+  bool isLoading = true;
+  int progress = 0;
+  final flutterWebViewPlugin = new FlutterWebviewPlugin();
+  Timer _timer;
 
   @override
   void initState() {
     super.initState();
-    flutterWebviewPlugin.onStateChanged.listen((WebViewStateChanged wvs) {
-      if (wvs.type.toString() == 'WebViewState.finishLoad') {
-        //web page finishLoad
+    flutterWebViewPlugin.onStateChanged.listen((state) {
+      if (state.type == WebViewState.finishLoad) {
+        //加载完成
         setState(() {
-          foregroundWidget = null;
+          isLoading = false;
+        });
+      } else if (state.type == WebViewState.shouldStart) {
+        setState(() {
+          isLoading = true;
         });
       }
     });
@@ -44,22 +38,73 @@ class _WebviewPageState extends State<WebviewPage> {
   @override
   Widget build(BuildContext context) {
     return WebviewScaffold(
+      url: widget.url,
       appBar: AppBar(
-        title: TextField(
-          autofocus: false,
-          controller: controller,
-          textInputAction: TextInputAction.go,
-          onSubmitted: (url) => launchUrl(),
+        elevation: 0.1,
+        title: Text(
+          widget.title,
           style: TextStyle(color: Colors.white),
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: widget.title,
-            hintStyle: TextStyle(color: Colors.white),
-          ),
+        ),
+        iconTheme: IconThemeData(color: Colors.white),
+        bottom: PreferredSize(
+          child: _progressBar(),
+          preferredSize: Size.fromHeight(2.0),
         ),
       ),
-      url: widget.url,
       withZoom: false,
+      withLocalStorage: true,
+      withJavascript: true,
     );
   }
+
+  Widget _progressBar() {
+    timerCancel();
+    print(progress);
+    return SizedBox(
+      height: isLoading ? 2 : 0,
+      child: LinearProgressIndicator(
+        value: isLoading ? progress / 100 : 1,
+        backgroundColor: Color(0xfff3f3f3),
+        valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
+      ),
+    );
+  }
+
+  /// 模拟异步加载
+  Future _simulateProgress() async {
+    if (_timer == null) {
+      _timer = Timer.periodic(Duration(milliseconds: 50), (time) {
+        progress++;
+        if (progress > 98) {
+          _timer.cancel();
+          _timer = null;
+          return;
+        } else {
+          setState(() {});
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (_timer != null) {
+      _timer.cancel();
+      _timer = null;
+    }
+  }
+
+  void timerCancel() {
+    if (!isLoading) {
+      progress = 0;
+      if (_timer != null) {
+        _timer.cancel();
+        _timer = null;
+      }
+    } else {
+      _simulateProgress();
+    }
+  }
+
 }
