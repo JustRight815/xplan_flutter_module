@@ -66,6 +66,7 @@ flutter:
     - images/menu_video.png
     - images/menu_video_pre.png
     - images/hone_menu_icon_0.png
+    - images/setting_ic_head_default.png
 
 
   # This section identifies your Flutter project as a module meant for

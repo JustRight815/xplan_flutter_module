@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../WebLoadPage.dart';
 
@@ -11,6 +12,7 @@ class SettingPage extends StatefulWidget{
 }
 
 class _SettingPageState extends State<SettingPage>{
+  static const androidplatform = const MethodChannel("flutter_open_native");
 
   @override
   void initState() {
@@ -33,7 +35,7 @@ class _SettingPageState extends State<SettingPage>{
                         child: FadeInImage.assetNetwork(
                           width: 70,
                           height: 70,
-                          placeholder: "images/hone_menu_icon_0.png",
+                          placeholder: "images/setting_ic_head_default.png",
                           image: "images/hone_menu_icon_0.png",
                           fit: BoxFit.cover,
                         ),
@@ -50,41 +52,25 @@ class _SettingPageState extends State<SettingPage>{
                 )
             ),
             _commonDivider(),
-            new ListTile(
-              title: new Text('切换主题'),
-              onTap: () =>
-              {
-              },
-            ),
+            getItem("切换主题", () {}),
             _commonDivider(),
-            new ListTile(
-              title: new Text('打开相机'),
-              onTap: () =>
-              {
-              },
-            ),
+            getItem("打开相机", () {
+              androidplatform.invokeMethod('openCapture');
+            }),
             _commonDivider(),
-            new ListTile(
-              title: new Text('关于项目'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) =>
-                        new WebviewPage(
-                            title: "关于项目",
-                            url: "https://github.com/JustRight815/xplan_kotlin")
-                    )
-                );
-              },
-            ),
+            getItem("关于项目", () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          WebviewPage(
+                              title: "关于项目",
+                              url: "https://github.com/JustRight815/xplan_kotlin")
+                  )
+              );
+            }),
             _commonDivider(),
-            new Container(
-              child: new ListTile(
-                title: new Text("设置"),
-              ),
-              color: Colors.white,
-            ),
+            getItem("设置", () {}),
             _commonDivider(),
           ],
       )
@@ -92,7 +78,47 @@ class _SettingPageState extends State<SettingPage>{
   }
 
   Widget _commonDivider() {
-    return Divider(height: 1.0, color: Colors.black,);
+    return Divider(height: 1.0);
+  }
+
+  Widget getItem(String title, Function tap) {
+    return new ListTile(
+      title: new Text(title),
+      trailing: Icon(Icons.keyboard_arrow_right),
+      onTap: () {
+        tap();
+      },
+    );
+  }
+
+  Widget getIconImage(path) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+      child: Image.asset(path,
+          width: 30, height: 30),
+    );
+  }
+
+  Widget getItem1(String title, Function tap) {
+    return InkWell( //添加水波纹
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(10.0, 15.0, 10.0, 15.0),
+        child: Row(
+          children: <Widget>[
+            getIconImage("images/hone_menu_icon_0.png"),
+            Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(fontSize: 16.0),
+                )),
+            Icon(Icons.keyboard_arrow_right)
+          ],
+        ),
+      ),
+      onTap: () {
+        tap();
+      },
+    );
   }
 
 }
