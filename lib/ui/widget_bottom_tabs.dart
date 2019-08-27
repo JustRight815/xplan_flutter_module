@@ -4,16 +4,15 @@ import 'package:xplan_flutter/ui/widget_icon_font.dart';
 
 class BottomTabs extends StatefulWidget {
   final PageController pageController;
-  final ValueChanged<int> onTap;
+  final int currentIndex;
 
-  BottomTabs(this.pageController, this.onTap);
+  BottomTabs(this.pageController, this.currentIndex);
 
   @override
   _BottomTabsState createState() => _BottomTabsState();
 }
 
 class _BottomTabsState extends State<BottomTabs> {
-  int currentIndex = 0;
   var tabImages = [
     [getTabImage('images/menu_pic.png'), getTabImage('images/menu_pic_pre.png')],
     [getTabImage('images/menu_video.png'), getTabImage('images/menu_video_pre.png')],
@@ -54,14 +53,10 @@ class _BottomTabsState extends State<BottomTabs> {
       items: _bottomTabs,
       type: BottomNavigationBarType.fixed,
       iconSize: 32,
-      currentIndex: currentIndex,
+      currentIndex: widget.currentIndex,
       onTap: (int index) {
-        if (widget.onTap != null) {
-          setState(() {
-            currentIndex = index;
-          });
+        if (widget.pageController != null) {
           widget.pageController.jumpToPage(index);
-          widget.onTap(index);
         }
       },
     );
@@ -75,11 +70,10 @@ class _BottomTabsState extends State<BottomTabs> {
   }
 
   Image getTabIcon(int curIndex) {
-    if (curIndex == currentIndex) {
+    if (curIndex == widget.currentIndex) {
       return tabImages[curIndex][1];
     }
     return tabImages[curIndex][0];
   }
-
 
 }

@@ -19,6 +19,7 @@ class _HomePageState extends State<HomePage>{
   int _currentPageIndex = 0;
   PageController _pageController;
   var appBarTitles = [ AppStrings.video, AppStrings.picture, AppStrings.toutiao, AppStrings.setting];
+  final bodyList = [VideoPage(), PicturePage(), NewsPage(), SettingPage()];
 
   @override
   void initState() {
@@ -31,7 +32,7 @@ class _HomePageState extends State<HomePage>{
     return Scaffold(
       drawer: new Drawer(child: homeDrawer()),
       appBar: _buildAppBar(),
-      bottomNavigationBar: BottomTabs(_pageController, _pageChange),
+        bottomNavigationBar: BottomTabs(_pageController, _currentPageIndex),
       body: _buildBody()
     );
   }
@@ -54,18 +55,31 @@ class _HomePageState extends State<HomePage>{
     return appBarTitles[_currentPageIndex];
   }
 
-  ///页面切换回调
-  void _pageChange(int index) {
-    setState(() {
-      if (_currentPageIndex != index) {
+  ///build main body.
+  Widget _buildBody() {
+    return Stack(
+      children: <Widget>[
+        PageView(
+          physics: NeverScrollableScrollPhysics(), //屏蔽左右滚动
+          onPageChanged: onPageChanged,
+          controller: _pageController,
+          children: bodyList,
+        )
+      ],
+    );
+  }
+
+  void onPageChanged(int index) {
+    if (_currentPageIndex != index) {
+      setState(() {
         _currentPageIndex = index;
-      }
-    });
+      });
+    }
   }
 
   static Widget homeDrawer() {
     return new ListView(padding: const EdgeInsets.only(), children: <Widget>[
-      _drawerHeader(),
+      new UserAccountsDrawerHeader(),
       new ClipRect(
         child: new ListTile(
           leading: new CircleAvatar(child: new Text("1")),
@@ -86,29 +100,5 @@ class _HomePageState extends State<HomePage>{
         onTap: () => {ToastUtil.shortToast("还没开发呢")},
       ),
     ]);
-  }
-
-  static Widget _drawerHeader() {
-    return new UserAccountsDrawerHeader(
-    );
-  }
-
-  ///build main body.
-  Widget _buildBody() {
-    return Stack(
-      children: <Widget>[
-        PageView(
-          physics: NeverScrollableScrollPhysics(),//屏蔽左右滚动
-          onPageChanged: _pageChange,
-          controller: _pageController,
-          children: <Widget>[
-            VideoPage(),
-            PicturePage(),
-            NewsPage(),
-            SettingPage()
-          ],
-        )
-      ],
-    );
   }
 }

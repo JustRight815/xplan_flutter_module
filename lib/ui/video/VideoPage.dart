@@ -31,6 +31,7 @@ class _VideoPageState extends State<VideoPage> with AutomaticKeepAliveClientMixi
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
       color: Colors.white,
       child: Stack(
@@ -123,6 +124,5 @@ class _VideoPageState extends State<VideoPage> with AutomaticKeepAliveClientMixi
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }

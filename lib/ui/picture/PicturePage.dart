@@ -15,6 +15,9 @@ class PicturePage extends StatefulWidget {
 }
 
 class _PicturePageState extends State<PicturePage> with AutomaticKeepAliveClientMixin{
+  @override
+  bool get wantKeepAlive => true;
+
   List<CommonModel> bannerList = []; //轮播图列表
   List<CommonModel> menuList = []; //菜单列表
   List<CommonModel> gridList = new List<CommonModel>(); //瀑布流图片列表
@@ -38,6 +41,7 @@ class _PicturePageState extends State<PicturePage> with AutomaticKeepAliveClient
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
       color: Colors.white,
       child: Stack(
@@ -88,7 +92,7 @@ class _PicturePageState extends State<PicturePage> with AutomaticKeepAliveClient
   }
 
   void _initData({bool loadMore = false}) {
-    Future.delayed(Duration(milliseconds: 500)).then((_) {
+    Future.delayed(Duration(milliseconds: 300)).then((_) {
       bannerList = new List<CommonModel>();
       for (int i = 0; i < 5; i++) {
         bannerList.add(new CommonModel(
@@ -178,29 +182,29 @@ class _PicturePageState extends State<PicturePage> with AutomaticKeepAliveClient
 
   /*banner轮播图*/
   Widget get _banner {
-    return Container(
-      height: 160,
-      child: Swiper(
-        autoplay: true,
-        loop: true,
-        pagination: SwiperPagination(),
-        itemCount: bannerList.length,
-        itemBuilder: (BuildContext context, int index) {
-          return CachedImage(
-            imageUrl: bannerList[index].icon,
-            fit: BoxFit.fill,
-          );
-        },
-        onTap: (index) {
+    if (bannerList.length > 0) {
+      return Container(
+        height: 160,
+        child: Swiper(
+          itemBuilder: (BuildContext context, int index) {
+            return CachedImage(
+              imageUrl: bannerList[index].icon,
+              fit: BoxFit.fill,
+            );
+          },
+          onTap: (index) {
 
-        },
-      ),
-    );
+          },
+          itemCount: bannerList.length,
+          pagination: SwiperPagination(),
+          autoplay: true,
+        ),
+      );
+    } else {
+      return new Container(height: 0.0, width: 0.0);
+    }
   }
 
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
 }
 
 
@@ -224,14 +228,6 @@ class _TravelItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-//        if (item.article.urls != null && item.article.urls.length > 0) {
-////          NavigatorUtil.push(
-////              context,
-////              WebView(
-////                url: item.article.urls[0].h5Url,
-////                title: '详情',
-////              ));
-////        }
       },
       child: Card(
         child: PhysicalModel(
