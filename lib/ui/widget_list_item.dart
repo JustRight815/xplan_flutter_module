@@ -1,7 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:xplan_flutter/common/util/StringUtil.dart';
 import 'package:xplan_flutter/model/VideoBean.dart';
+import 'package:xplan_flutter/utils/CacheImageUtil.dart';
 import 'WebLoadPage.dart';
 
 class GankListItem extends StatefulWidget {
@@ -58,18 +58,7 @@ class _GankListItemState extends State<GankListItem> {
                 children: <Widget>[
                   Container(
                     height: 200,
-                    color: Colors.grey,
-                  ),
-                  Container(
-                    height: 200,
-                    decoration: new BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      image: new DecorationImage(
-                        fit: BoxFit.cover,
-                        image: new CachedNetworkImageProvider(
-                            widget.gankItem.data.cover.detail),
-                      ),
-                    ),
+                    child: CacheImageUtil.cachedNetworkImage(widget.gankItem.data.cover.detail)
                   ),
                   Container(
                     margin: EdgeInsets.only(top: 16, left: 8),

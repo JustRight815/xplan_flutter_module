@@ -18,7 +18,7 @@ class HomePage extends StatefulWidget{
 class _HomePageState extends State<HomePage>{
   int _currentPageIndex = 0;
   PageController _pageController;
-  var appBarTitles = [ AppStrings.video, AppStrings.picture, AppStrings.toutiao, AppStrings.setting];
+  var appBarTitles = [ AppConst.video, AppConst.picture, AppConst.toutiao, AppConst.setting];
   final bodyList = [VideoPage(), PicturePage(), NewsPage(), SettingPage()];
 
   @override

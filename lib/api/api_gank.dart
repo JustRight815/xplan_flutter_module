@@ -1,8 +1,11 @@
 
 class GankApi {
 
-  //每日精选
+  //开眼每日精选
   static const String DAILY = "http://baobab.kaiyanapp.com/api/v4/tabs/selected";
+  //头条新闻
+  static const String API_TOU_TIAO = "http://is.snssdk.com/api/news/feed/v62/?refer=1&count=20&loc_mode=4&device_id=34960436458&iid=13136511752";
+
   /// gank api urls.
   static const String API_GANK_HOST = 'http://gank.io';
   static const String API_SPECIAL_DAY = "$API_GANK_HOST/api/day/";

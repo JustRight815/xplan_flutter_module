@@ -26,27 +26,27 @@ class _BottomTabsState extends State<BottomTabs> {
       ///视频
       BottomNavigationBarItem(
         icon: getTabIcon(0),
-        title: Text(AppStrings.video),
+        title: Text(AppConst.video),
       ),
 
       ///图片
       BottomNavigationBarItem(
         icon: getTabIcon(1),
         title:
-            Text(AppStrings.picture),
+            Text(AppConst.picture),
       ),
 
       ///头条
       BottomNavigationBarItem(
         icon: getTabIcon(2),
-        title: Text(AppStrings.toutiao),
+        title: Text(AppConst.toutiao),
       ),
 
       ///设置
       BottomNavigationBarItem(
         icon: getTabIcon(3),
         title:
-            Text(AppStrings.setting),
+            Text(AppConst.setting),
       ),
     ];
     return BottomNavigationBar(

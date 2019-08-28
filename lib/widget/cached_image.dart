@@ -8,6 +8,8 @@ class CachedImage extends StatelessWidget {
   final double width;
   final double height;
   final bool inSizedBox;
+  final PlaceholderWidgetBuilder placeholder;
+  final LoadingErrorWidgetBuilder errorWidget;
 
   const CachedImage({
     Key key,
@@ -17,6 +19,8 @@ class CachedImage extends StatelessWidget {
     this.width,
     this.height,
     this.inSizedBox = false,
+    this.placeholder,
+    this.errorWidget,
   })  : assert(imageUrl != null),
         super(key: key);
 
@@ -25,20 +29,20 @@ class CachedImage extends StatelessWidget {
     return inSizedBox
         ? FractionallySizedBox(
             widthFactor: 1,
-            child: CachedNetworkImage(
-              alignment: alignment,
-              fit: fit,
-              imageUrl: imageUrl,
-              width: width,
-              height: height,
-            ),
+            child: cachedNetworkImage(),
           )
-        : CachedNetworkImage(
-            alignment: alignment,
-            fit: fit,
-            imageUrl: imageUrl,
-            width: width,
-            height: height,
-          );
+        : cachedNetworkImage();
+  }
+
+  Widget cachedNetworkImage() {
+    return CachedNetworkImage(
+      placeholder: placeholder,
+      errorWidget: errorWidget,
+      alignment: alignment,
+      fit: fit,
+      imageUrl: imageUrl,
+      width: width,
+      height: height,
+    );
   }
 }

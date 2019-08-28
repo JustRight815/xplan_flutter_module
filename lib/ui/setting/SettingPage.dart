@@ -18,7 +18,7 @@ class _SettingPageState extends State<SettingPage>
   @override
   bool get wantKeepAlive => true;
   bool _isLoading = true;
-  MethodChannel methodChannel = const MethodChannel(AppStrings.NATIVE_CHANNEL);
+  MethodChannel methodChannel = const MethodChannel(AppConst.NATIVE_CHANNEL);
 
   @override
   void initState() {
@@ -90,7 +90,7 @@ class _SettingPageState extends State<SettingPage>
                     _commonDivider(),
                     getItem("扫一扫", () {
                       methodChannel.invokeMethod(
-                          AppStrings.NATIVE_OPEN_CAPTURE);
+                          AppConst.NATIVE_OPEN_CAPTURE);
                     }),
                     _commonDivider(),
                     getItem("设置", () {}),

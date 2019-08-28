@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:xplan_flutter/widget/ToastUtil.dart';
 /**
  * Created by toeii
  * Date: 2019-01-16
@@ -78,15 +79,20 @@ class HttpManager {
         callBack(response.data);
       }
     } catch (exception) {
-      _handError(errorCallBack, exception.toString());
+      if(exception == null){
+        _handError(errorCallBack, "exception == null");
+      }else{
+        _handError(errorCallBack, exception.toString());
+      }
     }
   }
 
   static void _handError(Function errorCallback, String errorMsg) {
+    print("<net> errorMsg :" + errorMsg);
+    ToastUtil.shortToast("网络出错了");
     if (errorCallback != null) {
       errorCallback(errorMsg);
     }
-    print("<net> errorMsg :" + errorMsg);
   }
 
 }

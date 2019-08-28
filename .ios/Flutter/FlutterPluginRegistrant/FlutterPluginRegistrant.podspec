@@ -20,5 +20,6 @@ Depends on all your plugins, and provides a function to register them.
   s.dependency 'flutter_webview_plugin'
   s.dependency 'fluttertoast'
   s.dependency 'path_provider'
+  s.dependency 'shared_preferences'
   s.dependency 'sqflite'
 end

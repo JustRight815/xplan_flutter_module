@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:xplan_flutter/ui/widget_bottom_tabs.dart';
+import 'package:xplan_flutter/constant/AppStrings.dart';
+import 'news/NewsChannelPage.dart';
 
 class NewsPage extends StatefulWidget{
   static const String ROUTER_NAME = '/';
@@ -9,27 +10,70 @@ class NewsPage extends StatefulWidget{
 
 }
 
-class _NewsPageState extends State<NewsPage>{
+class _NewsPageState extends State<NewsPage> with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin{
+  @override
+  bool get wantKeepAlive => true;
+  Map<String,String> _selectChannels = Map();
+  TabController tabController;
 
   @override
   void initState() {
     super.initState();
+    _selectChannels = AppConst.getChannel();
+    tabController = TabController(length: _selectChannels.length, vsync: this);
+
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
-        body: new Center(
-          child: new Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              new Text(
-                '我是新闻',
-              )
-            ],
-          ),
+        body: Column(
+          children: <Widget>[
+            TabBar(
+              indicatorColor: Colors.blueAccent,
+              controller: tabController,
+              isScrollable: true,
+              labelColor: Colors.blue,
+              unselectedLabelColor: Colors.black,
+              labelStyle:TextStyle(color: Colors.blue,fontSize: 16),
+              unselectedLabelStyle:TextStyle(color: Colors.black,fontSize: 16),
+              tabs: parseTabs(),
+            ),
+            Expanded(
+              flex: 1,
+              child: TabBarView(
+                controller: tabController,
+                children: parsePages(),
+              ),
+            ),
+          ],
         )
     );
+  }
+
+  List<Widget> parseTabs(){
+    List<Widget> tabs = List();
+    _selectChannels.forEach((key,value){
+      var tab = Tab(
+        text: '$key',
+      );
+      tabs.add(tab);
+    });
+    return tabs;
+  }
+
+  parsePages(){
+    List<MewsChannelPage> pages = List();
+    _selectChannels.forEach((key,code){
+      var isVideoPage = false;
+      if(code == "video"){
+        isVideoPage = true;
+      }
+      var page = MewsChannelPage(channelCode: code,isVideoPage: isVideoPage);
+      pages.add(page);
+    });
+    return pages;
   }
 
 }

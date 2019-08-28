@@ -16,9 +16,11 @@ class VideoPage extends StatefulWidget{
 }
 
 class _VideoPageState extends State<VideoPage> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   bool _isLoading = true;
   List<ItemList> _gankItems = new List();
-  int _page = 1;
   String mDate = "";
   RefreshController _refreshController;
 
@@ -108,21 +110,36 @@ class _VideoPageState extends State<VideoPage> with AutomaticKeepAliveClientMixi
         }
 
       }else{
-        print('httpManager=====>response == null ');
+        _onRefreshNoData(loadMore);
       }
+    },errorCallBack:(errorMsg){
+      _onRefreshError(loadMore);
     });
   }
 
+
   void _onRefresh() {
-    _page = 1;
     getData("");
   }
 
   void _onLoading() {
-    _page++;
     getData(mDate,loadMore: true);
   }
 
-  @override
-  bool get wantKeepAlive => true;
+  void _onRefreshNoData(bool loadMore) {
+    if(loadMore){
+      _refreshController.loadNoData();
+    }else{
+      _refreshController.refreshCompleted();
+    }
+  }
+
+  void _onRefreshError(bool loadMore) {
+    if(loadMore){
+      _refreshController.loadFailed();
+    }else{
+      _refreshController.refreshFailed();
+    }
+  }
+
 }
