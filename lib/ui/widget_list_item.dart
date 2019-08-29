@@ -55,21 +55,32 @@ class _GankListItemState extends State<GankListItem> {
             Container(
               margin: EdgeInsets.only(bottom: 8),
               child: Stack(
+                alignment: Alignment.center,
                 children: <Widget>[
                   Container(
                     height: 200,
+                      width: MediaQuery.of(context).size.width,
                     child: CacheImageUtil.cachedNetworkImage(widget.gankItem.data.cover.detail)
                   ),
-                  Container(
-                    margin: EdgeInsets.only(top: 16, left: 8),
-                    child: Text(
-                      widget.gankItem.data.title,
-                      textAlign: TextAlign.left,
-                      style: new TextStyle(
-                        color: Colors.white,
-                        fontSize: 17.0,
+                  Positioned(
+                    top: 10.0,
+                    width: MediaQuery.of(context).size.width,
+                    child:Container(
+                      margin: EdgeInsets.only(left: 10),
+                      child: Text(
+                        widget.gankItem.data.title,
+                        textAlign: TextAlign.left,
+                        style: new TextStyle(
+                          color: Colors.white,
+                          fontSize: 17.0,
+                        ),
                       ),
                     ),
+                  ),
+                  Container(
+                    height: 50,
+                    width: 50,
+                    child: Image.asset("images/video_play.png"),
                   ),
                 ],
               ),

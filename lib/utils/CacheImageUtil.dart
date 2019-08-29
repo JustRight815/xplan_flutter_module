@@ -12,9 +12,11 @@ class CacheImageUtil{
     color: AppConst.IMAGE_DEFAULT_BG,
   );
 
-  static Widget cachedNetworkImage(String url) {
+  static Widget cachedNetworkImage(String url,{double width,double height}) {
     return CachedImage(
         imageUrl: url,
+        width: width,
+        height: height,
         placeholder: (context, url) => defaultPlaceholder,
         errorWidget: (context, url, error) => defaultErrorWidget,
         fit: BoxFit.cover);

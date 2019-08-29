@@ -722,50 +722,49 @@ class _MewsChannelPageState extends State<MewsChannelPage>
       child: Column(
         children: <Widget>[
           Container(
-            height: 230,
             child: Stack(
+              alignment: Alignment.center,
               children: <Widget>[
-                // 视频标题 播放次数
                 Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: EdgeInsets.fromLTRB(15, 10, 30, 0),
-                  //从上到下 渐变透明
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [Colors.black87,Colors.black12]
-                      )
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      //title
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          '${item.title}',
-                          style: TextStyle(
-                              fontSize: 14,color: Colors.white
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    height: 200,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
+                    child: CacheImageUtil.cachedNetworkImage(
+                        item.video_detail_info.detail_video_large_image.url)
                 ),
-
-                //视频时长
                 Positioned(
-                  right: 20,
-                  bottom: 40,
+                  top: 6.0,
+                  width: MediaQuery.of(context).size.width,
                   child: Container(
-                    padding: EdgeInsets.all(5),
-                    color: Colors.black12,
+                    margin: EdgeInsets.only(left: 10,right: 10),
                     child: Text(
-                      getMinuteFromMill(item.video_duration),
-                      style: TextStyle(fontSize: 8),
+                      '${item.title}',
+                      style: TextStyle(
+                          fontSize: 16, color: Colors.white
+                      ),
                     ),
                   ),
                 ),
+                Container(
+                  height: 50,
+                  width: 50,
+                  child: Image.asset("images/video_play.png"),
+                ),
+//                //视频时长
+//                Positioned(
+//                  right: 20,
+//                  bottom: 40,
+//                  child: Container(
+//                    padding: EdgeInsets.all(5),
+//                    color: Colors.black12,
+//                    child: Text(
+//                      getMinuteFromMill(item.video_duration),
+//                      style: TextStyle(fontSize: 8),
+//                    ),
+//                  ),
+//                ),
 
               ],
             ),
@@ -780,13 +779,14 @@ class _MewsChannelPageState extends State<MewsChannelPage>
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    //头像
-                    ClipOval(
-                      child: Image.network(
-                          "${item.user_info.avatar_url}"
+                    Container(
+                      height: 30,
+                      width: 30,
+                      child: ClipOval(
+                        child: CacheImageUtil.cachedNetworkImage(
+                            item.user_info.avatar_url, width: 30, height: 30),
                       ),
                     ),
-                    //作者
                     Container(
                       margin: EdgeInsets.only(left: 10),
                       child: Text(
@@ -800,7 +800,6 @@ class _MewsChannelPageState extends State<MewsChannelPage>
                     ),
                   ],
                 ),
-                //关注 评论 。。。
                 Align(
                   alignment: Alignment.centerRight,
                   child: Row(
@@ -810,7 +809,8 @@ class _MewsChannelPageState extends State<MewsChannelPage>
                           margin: EdgeInsets.only(left: 10),
                           child: Row(
                             children: <Widget>[
-                              Icon(Icons.chat_bubble_outline),
+                              Icon(Icons.chat_bubble_outline,
+                                  color: Colors.black38),
                               Container(
                                 margin: EdgeInsets.only(left: 5),
                                 child: Text(
