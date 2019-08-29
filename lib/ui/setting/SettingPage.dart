@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:xplan_flutter/constant/AppStrings.dart';
+import 'package:xplan_flutter/constant/AppConst.dart';
 
 import '../WebLoadPage.dart';
 

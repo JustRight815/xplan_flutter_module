@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:xplan_flutter/api/api_gank.dart';
 import 'package:xplan_flutter/common/net/http_manager.dart';
+import 'package:xplan_flutter/constant/AppConst.dart';
 import 'package:xplan_flutter/model/VideoBean.dart';
 import 'package:xplan_flutter/ui/widget_list_item.dart';
 
@@ -76,7 +76,7 @@ class _VideoPageState extends State<VideoPage> with AutomaticKeepAliveClientMixi
   }
 
   void getData(String date,{bool loadMore = false}) async {
-    String requestUrl = GankApi.DAILY + "?date=" + date;
+    String requestUrl = AppConst.API_DAILY + "?date=" + date;
     HttpManager.get(requestUrl, (data) {
       if(null != data) {
         print('httpManager=====>response ' + data.toString());

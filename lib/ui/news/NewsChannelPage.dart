@@ -4,11 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:xplan_flutter/api/api_gank.dart';
 import 'package:xplan_flutter/common/net/http_manager.dart';
-import 'package:xplan_flutter/constant/AppStrings.dart';
+import 'package:xplan_flutter/constant/AppConst.dart';
 import 'package:xplan_flutter/utils/CacheImageUtil.dart';
 import 'package:xplan_flutter/utils/SPUtil.dart';
+import '../WebLoadPage.dart';
 import 'news.dart';
 import 'news_data.dart';
 import 'news_response.dart';
@@ -32,7 +32,7 @@ class _MewsChannelPageState extends State<MewsChannelPage>
   bool get wantKeepAlive => true;
   bool _isLoading = true;
   MethodChannel methodChannel = const MethodChannel(AppConst.NATIVE_CHANNEL);
-  var lastTime;
+  int lastTime;
   int currentTime;
   List<News> newsList = List();
 
@@ -46,25 +46,26 @@ class _MewsChannelPageState extends State<MewsChannelPage>
   }
 
   void _initData(bool isRefresh) {
-    lastTime = SpManager.singleton.getInt("news_" + widget.channelCode);
-    if (lastTime == 0) {
+//    lastTime = SpManager.singleton.getInt("news_" + widget.channelCode);
+    if (lastTime == null) {
       lastTime = DateTime.now().millisecond;
     }
     currentTime = DateTime.now().millisecond;
-    String requestUrl = GankApi.API_TOU_TIAO;
+    String requestUrl = AppConst.API_NEWS;
     Map<String, String> params = new Map();
-    print('httpManager=====>channelCode  ' + widget.channelCode);
-
-    params['category'] = widget.channelCode;
-    params['min_behot_time'] = lastTime.toString();
-    params['last_refresh_sub_entrance_interval'] = currentTime.toString();
-
+    params["refer"] = "1";
+    params["count"] = "20";
+    params["loc_mode"] = "4";
+    params["device_id"] = "34960436458";
+    params["iid"] = "13136511752";
+    params["category"] = widget.channelCode;
+    params["min_behot_time"] = lastTime.toString();
+    params["last_refresh_sub_entrance_interval"] = currentTime.toString();
     HttpManager.get(
         requestUrl,
         (result) {
           if (null != result) {
             SpManager.singleton.save("news_" + widget.channelCode, lastTime);
-            print('httpManager=====>response ' + result.toString());
             NewsResponse newsResponse = NewsResponse.fromJson(result);
             List<News> list = List();
             for (NewsData item in newsResponse.data) {
@@ -82,19 +83,23 @@ class _MewsChannelPageState extends State<MewsChannelPage>
                 //由于汽车、体育等频道第一条属于导航的内容，所以如果第一条没有标题，则移除
                 continue;
               }
+              if(widget.channelCode == "" && !isRefresh && newsList.length > 0 && news.label == "置顶"){
+                continue;
+              }
               list.add(news);
             }
-            print(
-                'httpManager=====>newsList.length  ' + list.length.toString());
-            print('httpManager=====>newsList ' + list.toString());
+            print('httpManager=====>newsList.length  ' + list.length.toString());
             if (isRefresh) {
               _refreshController.refreshCompleted();
               setState(() {
-                newsList = list;
+                if(widget.channelCode == "" && newsList.length >= 2){
+                  newsList.removeAt(0);
+                  newsList.removeAt(0);
+                }
+                newsList.insertAll(0,list);
                 _isLoading = false;
               });
             } else {
-              print('httpManager=====>loadMore');
               _refreshController.loadComplete();
               setState(() {
                 newsList.addAll(list);
@@ -103,7 +108,6 @@ class _MewsChannelPageState extends State<MewsChannelPage>
             }
           } else {
             _onRefreshNoData(!isRefresh);
-            print('httpManager=====>response == null ');
           }
         },
         params: params,
@@ -145,11 +149,9 @@ class _MewsChannelPageState extends State<MewsChannelPage>
                     itemBuilder: (context, index) {
                       if (widget.channelCode == '"video"' ||
                           widget.isVideoPage) {
-                        print("channel code ${widget.channelCode}");
                         //视频page
-                        return new Container(height: 0.0, width: 0.0);
+                        return buildVideoItem(newsList[index],index);
                       } else {
-                        print("channel code ${widget.channelCode}");
                         //普通 page
                         return buildItem(newsList[index]);
                       }
@@ -194,7 +196,15 @@ class _MewsChannelPageState extends State<MewsChannelPage>
   Widget buildItem(News item) {
     return GestureDetector(
       onTap: () {
-//        CommonUtil.push(context, WebPage(url: item.article_url,));
+        Navigator.push(
+          context,
+          new MaterialPageRoute(
+              builder: (context) =>
+              new WebviewPage(
+                  title: item.title,
+                  url: item.article_url)
+          ),
+        );
       },
       child: Column(
         children: <Widget>[
@@ -662,8 +672,6 @@ class _MewsChannelPageState extends State<MewsChannelPage>
       return item.video_detail_info.detail_video_large_image.url;
     } else {
       print("zh ========== hasVideoOrGallery " + item.image_list[0].url);
-      print("zh ========== hasVideoOrGallery1 " +
-          item.image_list[0].url.replaceAll("list/300x196", "large"));
       return item.image_list[0].url;
     }
   }
@@ -678,18 +686,6 @@ class _MewsChannelPageState extends State<MewsChannelPage>
           size: 60.0,
         ),
       );
-//      return Positioned(
-//        top: 90,
-//        right: MediaQuery.of(context).size.width / 2,
-//        child: Align(
-//          alignment: Alignment.center,
-//          child: Icon(
-//            Icons.play_arrow,
-//            color:Colors.grey,
-//            size: 40.0,
-//          ),
-//        )
-//      );
     }
     return SizedBox(
       width: 0,
@@ -710,25 +706,138 @@ class _MewsChannelPageState extends State<MewsChannelPage>
           ),
         ),
       );
-//      return Positioned(
-//        right: 40,
-//        bottom: 40,
-//        child: Align(
-//          alignment: Alignment.bottomRight,
-//          child: Container(
-//            padding: EdgeInsets.all(5),
-//            color: Colors.black12,
-//            child: Text(
-//              '${item.video_duration}',
-//              style: TextStyle(fontSize: 8),
-//            ),
-//          ),
-//        )
-//      );
     }
     return SizedBox(
       width: 0,
       height: 0,
     );
   }
+
+  //视频条目
+  Widget buildVideoItem(News item,int index){
+    return GestureDetector(
+      onTap: (){
+        //click
+      },
+      child: Column(
+        children: <Widget>[
+          Container(
+            height: 230,
+            child: Stack(
+              children: <Widget>[
+                // 视频标题 播放次数
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.fromLTRB(15, 10, 30, 0),
+                  //从上到下 渐变透明
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [Colors.black87,Colors.black12]
+                      )
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      //title
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          '${item.title}',
+                          style: TextStyle(
+                              fontSize: 14,color: Colors.white
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                //视频时长
+                Positioned(
+                  right: 20,
+                  bottom: 40,
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    color: Colors.black12,
+                    child: Text(
+                      getMinuteFromMill(item.video_duration),
+                      style: TextStyle(fontSize: 8),
+                    ),
+                  ),
+                ),
+
+              ],
+            ),
+          ),
+          //视频出处
+          Container(
+            padding: EdgeInsets.only(left: 10,right: 10),
+            color: Colors.white,
+            height: 50,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    //头像
+                    ClipOval(
+                      child: Image.network(
+                          "${item.user_info.avatar_url}"
+                      ),
+                    ),
+                    //作者
+                    Container(
+                      margin: EdgeInsets.only(left: 10),
+                      child: Text(
+                        '${item.user_info.name}',
+                        style: TextStyle(
+                          fontSize:14,color: Colors.black,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ],
+                ),
+                //关注 评论 。。。
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Row(
+                    children: <Widget>[
+                      //评论
+                      Container(
+                          margin: EdgeInsets.only(left: 10),
+                          child: Row(
+                            children: <Widget>[
+                              Icon(Icons.chat_bubble_outline),
+                              Container(
+                                margin: EdgeInsets.only(left: 5),
+                                child: Text(
+                                  "${item.comment_count}",
+                                  style: TextStyle(
+                                      fontSize: 12,color: Colors.black
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          Divider(
+            color: Colors.white,
+            height: 5,
+            indent: 15,
+          ),
+        ],
+      ),
+    );
+  }
+
 }

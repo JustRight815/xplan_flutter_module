@@ -84,6 +84,7 @@ class News{
   String url;
   bool has_image;
   bool has_video;
+  String label;
   int video_duration;
   VideoEntity video_detail_info;
   int group_id;
@@ -93,7 +94,7 @@ class News{
   News({this.article_type, this.tag, this.title, this.hot, this.source,
     this.comment_count, this.article_url, this.gallary_image_count,
     this.video_style, this.item_id, this.user_info, this.behot_time, this.url,
-    this.has_image, this.has_video, this.video_duration,
+    this.has_image, this.has_video, this.label, this.video_duration,
     this.video_detail_info, this.group_id, this.middle_image,
     this.image_list});
 
@@ -114,6 +115,7 @@ class News{
       url: json['url'],
       has_image: json['has_image'],
       has_video: json['has_video'],
+        label: json['label'],
       video_duration: json['video_duration'],
       group_id: json['group_id']
     );
@@ -151,7 +153,8 @@ class News{
   'behot_time':behot_time,
   'url':url,
   'has_image':has_image,
-  'has_video':has_video,
+    'has_video': has_video,
+    'label': label,
   'video_duration':video_duration,
   'group_id':group_id,
   'user_info':user_info,

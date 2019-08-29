@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
-///此类定义了app中所有的字符串常量.
-
 class AppConst  {
+  //开眼每日精选
+  static const String API_DAILY = "http://baobab.kaiyanapp.com/api/v4/tabs/selected";
+  //头条新闻
+  static const String API_NEWS = "http://is.snssdk.com/api/news/feed/v62/";
+
   static const String picture = '图片';
   static const String video = '视频';
   static const String toutiao = '头条';
@@ -13,7 +16,7 @@ class AppConst  {
   /**
   * 获取默认频道
   */
-  static Map<String,String> getChannel(){
+  static Map<String,String> getNewsChannel(){
     Map<String,String> channel = Map();
     channel["推荐"] = "";
     channel["视频"] = "video";
@@ -36,19 +39,14 @@ class AppConst  {
     channel["养生"] = "news_regimen";
     channel["故事"] = "news_story";
     channel["美文"] = "news_essay";
-
     return channel;
   }
 
-  /**频道对应的请求参数*/
   static final String CHANNEL_CODE = "channelCode";
   static final String IS_VIDEO_LIST = "isVideoList";
-
   static final String ARTICLE_GENRE_VIDEO = "video";
   static final String  ARTICLE_GENRE_AD = "ad";
-
   static final String TAG_MOVIE = "video_movie";
-
   static final String URL_VIDEO = "/video/urls/v/1/toutiao/mp4/%s?r=%s";
 
   static final Color IMAGE_DEFAULT_BG = const Color(0xFFDDDDDD);

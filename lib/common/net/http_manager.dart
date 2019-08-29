@@ -1,10 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:xplan_flutter/widget/ToastUtil.dart';
 /**
- * Created by toeii
- * Date: 2019-01-16
+ * 网络处理类
  */
-///网络处理类
 class HttpManager {
   static const String GET = "get";
   static const String POST = "post";
@@ -59,6 +57,7 @@ class HttpManager {
           paramStr = paramStr.substring(0, paramStr.length - 1);
           url += paramStr;
         }
+        print("<net> GET url ==== " + url.toString());
         response = await dio.get(url);
       } else {
         if (params != null && params.isNotEmpty) {

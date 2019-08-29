@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:xplan_flutter/constant/AppStrings.dart';
+import 'package:xplan_flutter/constant/AppConst.dart';
 import 'news/NewsChannelPage.dart';
 
 class NewsPage extends StatefulWidget{
@@ -19,9 +19,8 @@ class _NewsPageState extends State<NewsPage> with AutomaticKeepAliveClientMixin,
   @override
   void initState() {
     super.initState();
-    _selectChannels = AppConst.getChannel();
+    _selectChannels = AppConst.getNewsChannel();
     tabController = TabController(length: _selectChannels.length, vsync: this);
-
   }
 
   @override
