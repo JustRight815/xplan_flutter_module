@@ -12,6 +12,7 @@ class AppConst  {
   static const String setting = '设置';
   static const String NATIVE_CHANNEL = 'flutter_open_native';
   static const String NATIVE_OPEN_CAPTURE = 'flutter_open_capture';
+  static const String NATIVE_OPEN_PLAY_DETAIL = 'flutter_open_play_detail';
 
   /**
   * 获取默认频道

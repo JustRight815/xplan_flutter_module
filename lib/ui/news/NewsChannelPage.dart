@@ -718,6 +718,14 @@ class _MewsChannelPageState extends State<MewsChannelPage>
     return GestureDetector(
       onTap: (){
         //click
+        methodChannel.invokeMethod(
+            AppConst.NATIVE_OPEN_PLAY_DETAIL, {
+          "playUrl": "",
+          "playTitle": item.title,
+          "playDescription": "",
+          "playPic": item.video_detail_info.detail_video_large_image.url,
+          "playId": item.video_detail_info.video_id
+        });
       },
       child: Column(
         children: <Widget>[
