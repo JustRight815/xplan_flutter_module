@@ -132,10 +132,12 @@ class NewsItemWidget extends StatelessWidget {
 
   Widget getBottomWidget(News item) {
     return Align(
-      alignment: Alignment.bottomLeft,
+      alignment: Alignment.center,
       child: Container(
+        alignment: Alignment.centerLeft,
         margin: EdgeInsets.only(top: 10),
         child: Row(
+
           children: <Widget>[
             getAuthor(item.source),
             getCommentCount(item.comment_count),
@@ -170,7 +172,8 @@ class NewsItemWidget extends StatelessWidget {
 
   Widget getNewsTime(int timeSamp) {
     return Container(
-      margin: EdgeInsets.only(left: 5),
+      alignment: Alignment.center,
+      margin: EdgeInsets.only(left: 5,top: 2),
       child: Text(
         '${formatDate(DateTime.fromMillisecondsSinceEpoch(timeSamp * 1000), [
           yyyy,
@@ -298,7 +301,6 @@ class NewsItemWidget extends StatelessWidget {
   Widget getNewsTag(News item) {
     if (item.label != null && item.label.isNotEmpty) {
       return Align(
-        alignment: Alignment.bottomLeft,
         child: SizedBox(
             child: Container(
           margin: EdgeInsets.only(left: 6),

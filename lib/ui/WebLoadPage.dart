@@ -43,7 +43,7 @@ class WebviewPageState extends State<WebviewPage> {
         elevation: 0.1,
         title: Text(
           widget.title,
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white,fontSize: 16),
         ),
         iconTheme: IconThemeData(color: Colors.white),
         bottom: PreferredSize(

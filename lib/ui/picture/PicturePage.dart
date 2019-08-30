@@ -5,7 +5,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:xplan_flutter/model/common_model.dart';
 import 'package:xplan_flutter/ui/picture/widget/PictureGridItem.dart';
 import 'package:xplan_flutter/widget/cached_image.dart';
-import 'package:xplan_flutter/widget/local_nav.dart';
+import 'package:xplan_flutter/ui/picture/widget/PicMenuWidget.dart';
 
 class PicturePage extends StatefulWidget {
   static const String ROUTER_NAME = '/';
@@ -43,7 +43,7 @@ class _PicturePageState extends State<PicturePage> with AutomaticKeepAliveClient
   Widget build(BuildContext context) {
     super.build(context);
     return Container(
-      color: Colors.white,
+      color: Color(0x0FFFFFFF),
       child: Stack(
         children: <Widget>[
           Offstage(
@@ -100,15 +100,25 @@ class _PicturePageState extends State<PicturePage> with AutomaticKeepAliveClient
       }
       menuList = new List<CommonModel>();
       menuList.add(
-          new CommonModel(icon: "images/hone_menu_icon_0.png", title: "美食"));
+          new CommonModel(icon: "images/ic_category_0.png", title: "美食"));
       menuList.add(
-          new CommonModel(icon: "images/hone_menu_icon_0.png", title: "电影"));
+          new CommonModel(icon: "images/ic_category_1.png", title: "电影"));
       menuList.add(
-          new CommonModel(icon: "images/hone_menu_icon_0.png", title: "酒店"));
+          new CommonModel(icon: "images/ic_category_2.png", title: "住宿"));
       menuList.add(
-          new CommonModel(icon: "images/hone_menu_icon_0.png", title: "酒店"));
+          new CommonModel(icon: "images/ic_category_3.png", title: "生活"));
       menuList.add(
-          new CommonModel(icon: "images/hone_menu_icon_0.png", title: "酒店"));
+          new CommonModel(icon: "images/ic_category_4.png", title: "KTV"));
+      menuList.add(
+          new CommonModel(icon: "images/ic_category_5.png", title: "旅游"));
+      menuList.add(
+          new CommonModel(icon: "images/ic_category_6.png", title: "学习"));
+      menuList.add(
+          new CommonModel(icon: "images/ic_category_7.png", title: "汽车"));
+      menuList.add(
+          new CommonModel(icon: "images/ic_category_8.png", title: "摄影"));
+      menuList.add(
+          new CommonModel(icon: "images/ic_category_15.png", title: "全部分类"));
 
       List<CommonModel> list = new List<CommonModel>();
       for (int i = 0; i < 20; i++) {
@@ -141,31 +151,51 @@ class _PicturePageState extends State<PicturePage> with AutomaticKeepAliveClient
             child: _banner,
           ),
           SliverToBoxAdapter(
-            child: Padding(/*local导航*/
-              padding: EdgeInsets.fromLTRB(7, 4, 7, 4),
-              child: LocalNav(
-                localNavList: menuList,
+              child: Container(
+                  color: Colors.white,
+                  height: 10
+              )
+          ),
+          SliverPadding(
+            padding: EdgeInsets.only(top: 0, bottom: 0),
+            sliver: SliverGrid(
+              gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 5, //横轴元素个数
+              ),
+              delegate: new SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                  return PicMenuWidget(commonModel: menuList[index]);
+                },
+                childCount: menuList.length,
               ),
             ),
           ),
-          SliverGrid(
-            gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,//横轴元素个数
-              mainAxisSpacing: 5,//垂直子Widget之间间距
-              crossAxisSpacing: 5,//水平子Widget之间间距
-              childAspectRatio: 0.8,//子Widget宽高比例
-            ),
-            delegate: new SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                return PictureGridItem(commonModel: gridList[index]);
-              },
-              childCount: gridList.length,
+          SliverToBoxAdapter(
+              child: Container(
+                  color: Colors.white,
+                  height: 10
+              )
+          ),
+          SliverPadding(
+            padding: EdgeInsets.only(left: 10, right: 10),
+            sliver: SliverGrid(
+              gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, //横轴元素个数
+                mainAxisSpacing: 5, //垂直子Widget之间间距
+                crossAxisSpacing: 5, //水平子Widget之间间距
+                childAspectRatio: 0.8, //子Widget宽高比例
+              ),
+              delegate: new SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                  return PictureGridItem(commonModel: gridList[index]);
+                },
+                childCount: gridList.length,
+              ),
             ),
           ),
         ],
       );
   }
-
 
   Widget getItemContainer(String item) {
     return Container(
