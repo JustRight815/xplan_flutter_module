@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:xplan_flutter/model/common_model.dart';
-import 'package:xplan_flutter/widget/cached_image.dart';
+import 'package:xplan_flutter/ui/picture/model/common_model.dart';
+import 'package:xplan_flutter/common/widget/CachedImageWidget.dart';
 
 class PictureGridItem extends StatelessWidget {
   final CommonModel commonModel;

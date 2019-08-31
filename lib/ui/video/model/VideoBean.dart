@@ -1,9 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'VideoBean.g.dart';
-/**
- * Created by toeii
- * Date: 2019-01-16
- */
+
 ///开眼推荐
 @JsonSerializable()
 class VideoBean extends Object {

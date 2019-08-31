@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:xplan_flutter/constant/AppConst.dart';
 import 'package:xplan_flutter/ui/news/model/news.dart';
-import 'package:xplan_flutter/utils/CacheImageUtil.dart';
-import '../../WebLoadPage.dart';
+import 'package:xplan_flutter/common/util/CacheImageUtil.dart';
+import '../../webview/WebviewPage.dart';
 
 class NewsItemWidget extends StatelessWidget {
   final News item;

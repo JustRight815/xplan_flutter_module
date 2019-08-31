@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xplan_flutter/constant/AppConst.dart';
-import 'package:xplan_flutter/ui/widget_icon_font.dart';
+import 'package:xplan_flutter/ui/home/widget/widget_icon_font.dart';
 
 class BottomTabs extends StatefulWidget {
   final PageController pageController;

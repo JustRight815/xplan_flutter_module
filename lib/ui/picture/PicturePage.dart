@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:xplan_flutter/common/widget/LoadStateWidget.dart';
+import 'package:xplan_flutter/common/widget/SmartRefreshWidget.dart';
 import 'package:xplan_flutter/constant/AppConst.dart';
-import 'package:xplan_flutter/model/common_model.dart';
+import 'package:xplan_flutter/ui/picture/model/common_model.dart';
 import 'package:xplan_flutter/ui/picture/widget/PictureGridItem.dart';
-import 'package:xplan_flutter/widget/cached_image.dart';
+import 'package:xplan_flutter/common/widget/CachedImageWidget.dart';
 import 'package:xplan_flutter/ui/picture/widget/PicMenuWidget.dart';
 
 class PicturePage extends StatefulWidget {
@@ -22,10 +24,10 @@ class _PicturePageState extends State<PicturePage> with AutomaticKeepAliveClient
   List<CommonModel> bannerList = []; //轮播图列表
   List<CommonModel> menuList = []; //菜单列表
   List<CommonModel> gridList = new List<CommonModel>(); //瀑布流图片列表
-  ScrollController _scrollController = ScrollController();
 
-  bool _isLoading = true;
   RefreshController _refreshController;
+  //页面加载状态，默认为加载中
+  LoadState _layoutState = LoadState.State_Loading;
 
   @override
   void initState() {
@@ -35,53 +37,27 @@ class _PicturePageState extends State<PicturePage> with AutomaticKeepAliveClient
   }
 
   @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
         appBar: _buildAppBar(),
-        body: Container(
-          color: Color(0x0FFFFFFF),
-          child: Stack(
-            children: <Widget>[
-              Offstage(
-                offstage: _isLoading,
-                child: SmartRefresher(
-                    controller: _refreshController,
-                    header: new ClassicHeader(
-                      failedText: '刷新失败!',
-                      completeText: '刷新完成!',
-                      releaseText: '释放可以刷新',
-                      idleText: '下拉刷新哦!',
-                      failedIcon: new Icon(Icons.clear, color: Colors.black),
-                      completeIcon: new Icon(Icons.done, color: Colors.black),
-                      idleIcon: new Icon(Icons.arrow_downward, color: Colors.black),
-                      releaseIcon: new Icon(
-                          Icons.arrow_upward, color: Colors.black),
-                      refreshingText: '正在刷新...',
-                      textStyle: Theme
-                          .of(context)
-                          .textTheme
-                          .body2,
-                    ),
-                    onRefresh: _onRefresh,
-                    onLoading: _onLoading,
-                    enablePullUp: true,
-                    child: _listView
-                ),
-              ),
-              Offstage(
-                offstage: !_isLoading,
-                child: Center(
-                  child: CupertinoActivityIndicator(),
-                ),
-              )
-            ],
+        body: LoadStateWidget(
+          state: _layoutState,
+          errorRetry: () {
+            setState(() {
+              _layoutState = LoadState.State_Loading;
+            });
+            //错误按钮点击过后进行重新加载
+            _initData();
+          },
+          successWidget: Container(
+            color: Color(0x0FFFFFFF),
+            child: SmartRefreshWidget(
+                controller: _refreshController,
+                child: _listView,
+                onRefresh: _onRefresh,
+                onLoading: _onLoading
+            ),
           ),
         )
     );
@@ -148,7 +124,7 @@ class _PicturePageState extends State<PicturePage> with AutomaticKeepAliveClient
         gridList.addAll(list);
       }
       setState(() {
-        _isLoading = false;
+        _layoutState = LoadState.State_Success;
       });
     });
   }
@@ -175,14 +151,8 @@ class _PicturePageState extends State<PicturePage> with AutomaticKeepAliveClient
           SliverToBoxAdapter(
             child: _banner,
           ),
-          SliverToBoxAdapter(
-              child: Container(
-                  color: Colors.white,
-                  height: 10
-              )
-          ),
           SliverPadding(
-            padding: EdgeInsets.only(top: 0, bottom: 0),
+            padding: EdgeInsets.only(top: 10, bottom: 10),
             sliver: SliverGrid(
               gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 5, //横轴元素个数
@@ -194,12 +164,6 @@ class _PicturePageState extends State<PicturePage> with AutomaticKeepAliveClient
                 childCount: menuList.length,
               ),
             ),
-          ),
-          SliverToBoxAdapter(
-              child: Container(
-                  color: Colors.white,
-                  height: 10
-              )
           ),
           SliverPadding(
             padding: EdgeInsets.only(left: 10, right: 10),
@@ -261,151 +225,3 @@ class _PicturePageState extends State<PicturePage> with AutomaticKeepAliveClient
   }
 
 }
-
-
-//        StaggeredGridView.countBuilder(
-//          controller: _scrollController,
-//          crossAxisCount: 2,
-//          itemCount: gridList?.length ?? 0,
-//          itemBuilder: (BuildContext context, int index) =>
-//              _TravelItem(index: index, item: gridList[index]),
-//          staggeredTileBuilder: (int index) => StaggeredTile.fit(1),
-//        ),
-
-
-class _TravelItem extends StatelessWidget {
-  final CommonModel item;
-  final int index;
-
-  const _TravelItem({Key key, this.item, this.index}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-      },
-      child: Card(
-        child: PhysicalModel(
-          color: Colors.transparent,
-          clipBehavior: Clip.antiAlias,
-          borderRadius: BorderRadius.circular(5),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _itemImage,
-              Container(
-                padding: EdgeInsets.all(4),
-                child: Text(
-                  item.title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 14, color: Colors.black87),
-                ),
-              ),
-              _infoText,
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget get _itemImage {
-    return Stack(
-      children: <Widget>[
-        CachedImage(
-          inSizedBox: true,
-          imageUrl: item.icon,
-        ),
-        Positioned(
-          bottom: 8,
-          left: 8,
-          child: Container(
-            padding: EdgeInsets.fromLTRB(5, 1, 5, 1),
-            decoration: BoxDecoration(
-              color: Colors.black54,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(right: 3),
-                  child: Icon(
-                    Icons.location_on,
-                    color: Colors.white,
-                    size: 12,
-                  ),
-                ),
-                LimitedBox(
-                  maxWidth: 130,
-                  child: Text(
-                    _poiName(),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 12, color: Colors.white),
-                  ),
-                )
-              ],
-            ),
-          ),
-        )
-      ],
-    );
-  }
-
-  Widget get _infoText {
-    return Container(
-      padding: EdgeInsets.fromLTRB(6, 0, 6, 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              PhysicalModel(
-                color: Colors.transparent,
-                clipBehavior: Clip.antiAlias,
-                borderRadius: BorderRadius.circular(12),
-                child: CachedImage(
-                  imageUrl: item.icon,
-                  width: 24,
-                  height: 24,
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.all(5),
-                width: 90,
-                child: Text(
-                  item.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 12),
-                ),
-              )
-            ],
-          ),
-          Row(
-            children: <Widget>[
-              Icon(
-                Icons.thumb_up,
-                size: 14,
-                color: Colors.grey,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 3),
-                child: Text(
-                  item.title,
-                  style: TextStyle(fontSize: 10),
-                ),
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  String _poiName() {
-    return "未知";
-  }
-}
-

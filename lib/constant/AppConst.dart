@@ -43,12 +43,5 @@ class AppConst  {
     return channel;
   }
 
-  static final String CHANNEL_CODE = "channelCode";
-  static final String IS_VIDEO_LIST = "isVideoList";
-  static final String ARTICLE_GENRE_VIDEO = "video";
-  static final String  ARTICLE_GENRE_AD = "ad";
-  static final String TAG_MOVIE = "video_movie";
-  static final String URL_VIDEO = "/video/urls/v/1/toutiao/mp4/%s?r=%s";
-
   static final Color IMAGE_DEFAULT_BG = const Color(0xFFDDDDDD);
 }

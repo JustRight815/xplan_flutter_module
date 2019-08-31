@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:xplan_flutter/widget/ToastUtil.dart';
+import 'package:xplan_flutter/common/util/ToastUtil.dart';
 /**
  * 网络处理类
  */

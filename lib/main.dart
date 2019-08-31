@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import 'ui/HomePage.dart';
+import 'ui/home/HomePage.dart';
 
 void main() => runApp(_widgetForRoute(window.defaultRouteName));
 

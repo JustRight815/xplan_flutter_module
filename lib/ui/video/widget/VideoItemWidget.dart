@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:xplan_flutter/common/util/StringUtil.dart';
-import 'package:xplan_flutter/model/VideoBean.dart';
-import 'package:xplan_flutter/utils/CacheImageUtil.dart';
-import 'WebLoadPage.dart';
+import 'package:xplan_flutter/ui/video/model/VideoBean.dart';
+import 'package:xplan_flutter/common/util/CacheImageUtil.dart';
+import '../../webview/WebviewPage.dart';
 
-class GankListItem extends StatefulWidget {
+class VideoItemWidget extends StatefulWidget {
   final ItemList gankItem;
 
-  GankListItem(this.gankItem);
+  VideoItemWidget(this.gankItem);
 
   @override
-  _GankListItemState createState() => _GankListItemState();
+  _VideoItemWidgetState createState() => _VideoItemWidgetState();
 }
 
-class _GankListItemState extends State<GankListItem> {
+class _VideoItemWidgetState extends State<VideoItemWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

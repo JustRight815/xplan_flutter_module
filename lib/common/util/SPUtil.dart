@@ -1,11 +1,9 @@
-
-
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SpManager{
+class SpUtil{
 
-  SpManager._internal();
-  static SpManager singleton = SpManager._internal();
+  SpUtil._internal();
+  static SpUtil singleton = SpUtil._internal();
 
 
   save(String key,Object value)async{

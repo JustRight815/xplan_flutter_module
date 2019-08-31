@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:xplan_flutter/common/net/http_manager.dart';
+import 'package:xplan_flutter/common/widget/LoadStateWidget.dart';
+import 'package:xplan_flutter/common/widget/SmartRefreshWidget.dart';
 import 'package:xplan_flutter/constant/AppConst.dart';
-import 'package:xplan_flutter/model/VideoBean.dart';
-import 'package:xplan_flutter/ui/widget_list_item.dart';
+import 'package:xplan_flutter/ui/video/model/VideoBean.dart';
+import 'package:xplan_flutter/ui/video/widget/VideoItemWidget.dart';
 
 class VideoPage extends StatefulWidget{
   static const String ROUTER_NAME = '/';
@@ -19,7 +21,8 @@ class _VideoPageState extends State<VideoPage> with AutomaticKeepAliveClientMixi
   @override
   bool get wantKeepAlive => true;
 
-  bool _isLoading = true;
+  //页面加载状态，默认为加载中
+  LoadState _layoutState = LoadState.State_Loading;
   List<ItemList> _gankItems = new List();
   String mDate = "";
   RefreshController _refreshController;
@@ -36,43 +39,27 @@ class _VideoPageState extends State<VideoPage> with AutomaticKeepAliveClientMixi
     super.build(context);
     return Scaffold(
         appBar: _buildAppBar(),
-        body: Container(
-          color: Colors.white,
-          child: Stack(
-            children: <Widget>[
-              Offstage(
-                offstage: _isLoading,
-                child: SmartRefresher(
-                  controller: _refreshController,
-                  header: new ClassicHeader(
-                    failedText: '刷新失败!',
-                    completeText: '刷新完成!',
-                    releaseText: '释放可以刷新',
-                    idleText: '下拉刷新哦!',
-                    failedIcon: new Icon(Icons.clear, color: Colors.black),
-                    completeIcon: new Icon(Icons.done, color: Colors.black),
-                    idleIcon: new Icon(Icons.arrow_downward, color: Colors.black),
-                    releaseIcon: new Icon(Icons.arrow_upward, color: Colors.black),
-                    refreshingText: '正在刷新...',
-                    textStyle: Theme.of(context).textTheme.body2,
-                  ),
-                  onRefresh: _onRefresh,
-                  onLoading: _onLoading,
-                  enablePullUp: true,
-                  child: ListView.builder(
-                      itemCount: _gankItems?.length ?? 0,
-                      itemBuilder: (context, index) =>
-                          GankListItem(_gankItems[index])
-                  ),
+        body: LoadStateWidget(
+          state: _layoutState,
+          errorRetry: () {
+            setState(() {
+              _layoutState = LoadState.State_Loading;
+            });
+            //错误按钮点击过后进行重新加载
+            getData("");
+          },
+          successWidget: Container(
+            color: Color(0x0FFFFFFF),
+            child: SmartRefreshWidget(
+                controller: _refreshController,
+                child: ListView.builder(
+                    itemCount: _gankItems?.length ?? 0,
+                    itemBuilder: (context, index) =>
+                        VideoItemWidget(_gankItems[index])
                 ),
-              ),
-              Offstage(
-                offstage: !_isLoading,
-                child: Center(
-                  child: CupertinoActivityIndicator(),
-                ),
-              )
-            ],
+                onRefresh: _onRefresh,
+                onLoading: _onLoading
+            ),
           ),
         )
     );
@@ -102,21 +89,31 @@ class _VideoPageState extends State<VideoPage> with AutomaticKeepAliveClientMixi
           _refreshController.loadComplete();
           setState(() {
             _gankItems.addAll(videoList);
-            _isLoading = false;
+            _layoutState = LoadState.State_Success;
           });
         } else {
           _refreshController.refreshCompleted();
           setState(() {
             _gankItems = videoList;
-            _isLoading = false;
+            _layoutState = LoadState.State_Success;
           });
         }
 
       }else{
         _onRefreshNoData(loadMore);
+        if(_gankItems.length <= 0){
+          setState(() {
+            _layoutState = LoadState.State_Empty;
+          });
+        }
       }
     },errorCallBack:(errorMsg){
       _onRefreshError(loadMore);
+      if(_gankItems.length <= 0){
+        setState(() {
+          _layoutState = LoadState.State_Error;
+        });
+      }
     });
   }
 

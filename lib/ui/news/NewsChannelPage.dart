@@ -4,9 +4,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:xplan_flutter/common/net/http_manager.dart';
+import 'package:xplan_flutter/common/widget/LoadStateWidget.dart';
+import 'package:xplan_flutter/common/widget/SmartRefreshWidget.dart';
 import 'package:xplan_flutter/constant/AppConst.dart';
 import 'package:xplan_flutter/ui/news/widget/NewsItemWidget.dart';
-import 'package:xplan_flutter/utils/SPUtil.dart';
+import 'package:xplan_flutter/common/util/SPUtil.dart';
 import 'model/news.dart';
 import 'model/news_data.dart';
 import 'model/news_response.dart';
@@ -26,7 +28,9 @@ class _MewsChannelPageState extends State<MewsChannelPage>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-  bool _isLoading = true;
+
+  //页面加载状态，默认为加载中
+  LoadState _layoutState = LoadState.State_Loading;
   int lastTime;
   int currentTime;
   List<News> newsList = List();
@@ -41,7 +45,7 @@ class _MewsChannelPageState extends State<MewsChannelPage>
   }
 
   void _initData(bool isRefresh) {
-    Future<int> futureTime = SpManager.singleton.getInt("news_" + widget.channelCode);
+    Future<int> futureTime = SpUtil.singleton.getInt("news_" + widget.channelCode);
     futureTime.then((time) {
       lastTime = time;
       if (lastTime == null) {
@@ -62,7 +66,7 @@ class _MewsChannelPageState extends State<MewsChannelPage>
           requestUrl,
               (result) {
             if (null != result) {
-              SpManager.singleton.save("news_" + widget.channelCode, lastTime);
+              SpUtil.singleton.save("news_" + widget.channelCode, lastTime);
               NewsResponse newsResponse = NewsResponse.fromJson(result);
               List<News> list = List();
               for (NewsData item in newsResponse.data) {
@@ -94,22 +98,32 @@ class _MewsChannelPageState extends State<MewsChannelPage>
                     newsList.removeAt(0);
                   }
                   newsList.insertAll(0,list);
-                  _isLoading = false;
+                  _layoutState = LoadState.State_Success;
                 });
               } else {
                 _refreshController.loadComplete();
                 setState(() {
                   newsList.addAll(list);
-                  _isLoading = false;
+                  _layoutState = LoadState.State_Success;
                 });
               }
             } else {
               _onRefreshNoData(!isRefresh);
+              if (newsList.length <= 0) {
+                setState(() {
+                  _layoutState = LoadState.State_Empty;
+                });
+              }
             }
           },
           params: params,
           errorCallBack: (errorMsg) {
             _onRefreshError(!isRefresh);
+            if (newsList.length <= 0) {
+              setState(() {
+                _layoutState = LoadState.State_Error;
+              });
+            }
           });
     });
   }
@@ -119,46 +133,33 @@ class _MewsChannelPageState extends State<MewsChannelPage>
     super.build(context);
     return Scaffold(
         backgroundColor: Colors.white,
-        body: Stack(
-          children: <Widget>[
-            Offstage(
-              offstage: _isLoading,
-              child: SmartRefresher(
-                  controller: _refreshController,
-                  header: new ClassicHeader(
-                    failedText: '刷新失败!',
-                    completeText: '刷新完成!',
-                    releaseText: '释放可以刷新',
-                    idleText: '下拉刷新哦!',
-                    failedIcon: new Icon(Icons.clear, color: Colors.black),
-                    completeIcon: new Icon(Icons.done, color: Colors.black),
-                    idleIcon:
-                        new Icon(Icons.arrow_downward, color: Colors.black),
-                    releaseIcon:
-                        new Icon(Icons.arrow_upward, color: Colors.black),
-                    refreshingText: '正在刷新...',
-                    textStyle: Theme.of(context).textTheme.body2,
-                  ),
-                  onRefresh: _onRefresh,
-                  onLoading: _onLoading,
-                  enablePullUp: true,
-                  child: ListView.builder(
-                    itemCount: newsList.length,
-                    itemBuilder: (context, index) {
-                      return NewsItemWidget(item: newsList[index],
-                          isVideoPage: (widget.channelCode == "video" ||
-                              widget.isVideoPage));
-                    },
-                  )),
+        body: LoadStateWidget(
+          state: _layoutState,
+          errorRetry: () {
+            setState(() {
+              _layoutState = LoadState.State_Loading;
+            });
+            //错误按钮点击过后进行重新加载
+            _initData(true);
+          },
+          successWidget: Container(
+            color: Color(0x0FFFFFFF),
+            child: SmartRefreshWidget(
+                controller: _refreshController,
+                child: ListView.builder(
+                  itemCount: newsList.length,
+                  itemBuilder: (context, index) {
+                    return NewsItemWidget(item: newsList[index],
+                        isVideoPage: (widget.channelCode == "video" ||
+                            widget.isVideoPage));
+                  },
+                ),
+                onRefresh: _onRefresh,
+                onLoading: _onLoading
             ),
-            Offstage(
-              offstage: !_isLoading,
-              child: Center(
-                child: CupertinoActivityIndicator(),
-              ),
-            )
-          ],
-        ));
+          ),
+        )
+    );
   }
 
   void _onRefresh() {

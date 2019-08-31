@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:xplan_flutter/constant/AppConst.dart';
 
-import '../WebLoadPage.dart';
+import '../webview/WebviewPage.dart';
 
 class SettingPage extends StatefulWidget{
   static const String ROUTER_NAME = '/';

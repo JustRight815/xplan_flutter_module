@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:xplan_flutter/constant/AppConst.dart';
-import 'news/NewsChannelPage.dart';
+import 'NewsChannelPage.dart';
 
 class NewsPage extends StatefulWidget{
   static const String ROUTER_NAME = '/';

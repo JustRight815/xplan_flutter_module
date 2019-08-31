@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:xplan_flutter/constant/AppConst.dart';
-import 'package:xplan_flutter/ui/NewsPage.dart';
+import 'package:xplan_flutter/ui/news/NewsPage.dart';
 import 'package:xplan_flutter/ui/setting/SettingPage.dart';
 import 'package:xplan_flutter/ui/picture/PicturePage.dart';
 import 'package:xplan_flutter/ui/video/VideoPage.dart';
-import 'package:xplan_flutter/ui/widget_bottom_tabs.dart';
-import 'package:xplan_flutter/widget/ToastUtil.dart';
+import 'package:xplan_flutter/ui/home/widget/widget_bottom_tabs.dart';
+import 'package:xplan_flutter/common/util/ToastUtil.dart';
 
 class HomePage extends StatefulWidget{
   static const String ROUTER_NAME = '/';

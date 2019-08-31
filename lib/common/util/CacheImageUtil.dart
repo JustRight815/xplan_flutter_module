@@ -1,5 +1,5 @@
 import 'package:xplan_flutter/constant/AppConst.dart';
-import 'package:xplan_flutter/widget/cached_image.dart';
+import 'package:xplan_flutter/common/widget/CachedImageWidget.dart';
 import 'package:flutter/material.dart';
 
 class CacheImageUtil{

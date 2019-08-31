@@ -87,6 +87,8 @@ flutter:
     - images/ic_category_14.png
     - images/ic_category_15.png
     - images/ic_category_16.png
+    - images/stateview_data_error.png
+    - images/stateview_net_error.png
 
 
   # This section identifies your Flutter project as a module meant for
