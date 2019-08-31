@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:xplan_flutter/constant/AppConst.dart';
 import 'package:xplan_flutter/model/common_model.dart';
 import 'package:xplan_flutter/ui/picture/widget/PictureGridItem.dart';
 import 'package:xplan_flutter/widget/cached_image.dart';
@@ -42,44 +43,47 @@ class _PicturePageState extends State<PicturePage> with AutomaticKeepAliveClient
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Container(
-      color: Color(0x0FFFFFFF),
-      child: Stack(
-        children: <Widget>[
-          Offstage(
-            offstage: _isLoading,
-            child: SmartRefresher(
-                controller: _refreshController,
-                header: new ClassicHeader(
-                  failedText: '刷新失败!',
-                  completeText: '刷新完成!',
-                  releaseText: '释放可以刷新',
-                  idleText: '下拉刷新哦!',
-                  failedIcon: new Icon(Icons.clear, color: Colors.black),
-                  completeIcon: new Icon(Icons.done, color: Colors.black),
-                  idleIcon: new Icon(Icons.arrow_downward, color: Colors.black),
-                  releaseIcon: new Icon(
-                      Icons.arrow_upward, color: Colors.black),
-                  refreshingText: '正在刷新...',
-                  textStyle: Theme
-                      .of(context)
-                      .textTheme
-                      .body2,
+    return Scaffold(
+        appBar: _buildAppBar(),
+        body: Container(
+          color: Color(0x0FFFFFFF),
+          child: Stack(
+            children: <Widget>[
+              Offstage(
+                offstage: _isLoading,
+                child: SmartRefresher(
+                    controller: _refreshController,
+                    header: new ClassicHeader(
+                      failedText: '刷新失败!',
+                      completeText: '刷新完成!',
+                      releaseText: '释放可以刷新',
+                      idleText: '下拉刷新哦!',
+                      failedIcon: new Icon(Icons.clear, color: Colors.black),
+                      completeIcon: new Icon(Icons.done, color: Colors.black),
+                      idleIcon: new Icon(Icons.arrow_downward, color: Colors.black),
+                      releaseIcon: new Icon(
+                          Icons.arrow_upward, color: Colors.black),
+                      refreshingText: '正在刷新...',
+                      textStyle: Theme
+                          .of(context)
+                          .textTheme
+                          .body2,
+                    ),
+                    onRefresh: _onRefresh,
+                    onLoading: _onLoading,
+                    enablePullUp: true,
+                    child: _listView
                 ),
-                onRefresh: _onRefresh,
-                onLoading: _onLoading,
-                enablePullUp: true,
-                child: _listView
-            ),
+              ),
+              Offstage(
+                offstage: !_isLoading,
+                child: Center(
+                  child: CupertinoActivityIndicator(),
+                ),
+              )
+            ],
           ),
-          Offstage(
-            offstage: !_isLoading,
-            child: Center(
-              child: CupertinoActivityIndicator(),
-            ),
-          )
-        ],
-      ),
+        )
     );
   }
 
@@ -94,10 +98,17 @@ class _PicturePageState extends State<PicturePage> with AutomaticKeepAliveClient
   void _initData({bool loadMore = false}) {
     Future.delayed(Duration(milliseconds: 300)).then((_) {
       bannerList = new List<CommonModel>();
-      for (int i = 0; i < 5; i++) {
-        bannerList.add(new CommonModel(
+      bannerList.add(new CommonModel(
             icon: "https://m.360buyimg.com/mobilecms/s720x322_jfs/t4903/41/12296166/85214/15205dd6/58d92373N127109d8.jpg!q70.jpg"));
-      }
+      bannerList.add(new CommonModel(
+          icon: "https://img1.360buyimg.com/da/jfs/t4309/113/2596274814/85129/a59c5f5e/58d4762cN72d7dd75.jpg"));
+      bannerList.add(new CommonModel(
+          icon: "https://m.360buyimg.com/mobilecms/s720x322_jfs/t4675/88/704144946/137165/bbbe8a4e/58d3a160N621fc59c.jpg!q70.jpg"));
+      bannerList.add(new CommonModel(
+          icon: "https://m.360buyimg.com/mobilecms/s720x322_jfs/t4627/177/812580410/198036/24a79c26/58d4f1e9N5b9fc5ee.jpg!q70.jpg"));
+      bannerList.add(new CommonModel(
+          icon: "https://m.360buyimg.com/mobilecms/s720x322_jfs/t3097/241/9768114398/78418/47e4335e/58d8a637N6f178fbd.jpg!q70.jpg"));
+
       menuList = new List<CommonModel>();
       menuList.add(
           new CommonModel(icon: "images/ic_category_0.png", title: "美食"));
@@ -140,6 +151,20 @@ class _PicturePageState extends State<PicturePage> with AutomaticKeepAliveClient
         _isLoading = false;
       });
     });
+  }
+
+  ///build AppBar.
+  Widget _buildAppBar() {
+    return AppBar(
+        elevation: 5,
+        centerTitle: true,
+        title: Text(
+            AppConst.picture,
+            style: new TextStyle(
+              color: Colors.white,
+              fontSize: 18.0,
+            ))
+    );
   }
 
   //listView列表

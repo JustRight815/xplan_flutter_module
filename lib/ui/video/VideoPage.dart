@@ -34,44 +34,47 @@ class _VideoPageState extends State<VideoPage> with AutomaticKeepAliveClientMixi
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Container(
-      color: Colors.white,
-      child: Stack(
-        children: <Widget>[
-          Offstage(
-            offstage: _isLoading,
-            child: SmartRefresher(
-              controller: _refreshController,
-              header: new ClassicHeader(
-                failedText: '刷新失败!',
-                completeText: '刷新完成!',
-                releaseText: '释放可以刷新',
-                idleText: '下拉刷新哦!',
-                failedIcon: new Icon(Icons.clear, color: Colors.black),
-                completeIcon: new Icon(Icons.done, color: Colors.black),
-                idleIcon: new Icon(Icons.arrow_downward, color: Colors.black),
-                releaseIcon: new Icon(Icons.arrow_upward, color: Colors.black),
-                refreshingText: '正在刷新...',
-                textStyle: Theme.of(context).textTheme.body2,
+    return Scaffold(
+        appBar: _buildAppBar(),
+        body: Container(
+          color: Colors.white,
+          child: Stack(
+            children: <Widget>[
+              Offstage(
+                offstage: _isLoading,
+                child: SmartRefresher(
+                  controller: _refreshController,
+                  header: new ClassicHeader(
+                    failedText: '刷新失败!',
+                    completeText: '刷新完成!',
+                    releaseText: '释放可以刷新',
+                    idleText: '下拉刷新哦!',
+                    failedIcon: new Icon(Icons.clear, color: Colors.black),
+                    completeIcon: new Icon(Icons.done, color: Colors.black),
+                    idleIcon: new Icon(Icons.arrow_downward, color: Colors.black),
+                    releaseIcon: new Icon(Icons.arrow_upward, color: Colors.black),
+                    refreshingText: '正在刷新...',
+                    textStyle: Theme.of(context).textTheme.body2,
+                  ),
+                  onRefresh: _onRefresh,
+                  onLoading: _onLoading,
+                  enablePullUp: true,
+                  child: ListView.builder(
+                      itemCount: _gankItems?.length ?? 0,
+                      itemBuilder: (context, index) =>
+                          GankListItem(_gankItems[index])
+                  ),
+                ),
               ),
-              onRefresh: _onRefresh,
-              onLoading: _onLoading,
-              enablePullUp: true,
-              child: ListView.builder(
-                  itemCount: _gankItems?.length ?? 0,
-                  itemBuilder: (context, index) =>
-                      GankListItem(_gankItems[index])
-              ),
-            ),
+              Offstage(
+                offstage: !_isLoading,
+                child: Center(
+                  child: CupertinoActivityIndicator(),
+                ),
+              )
+            ],
           ),
-          Offstage(
-            offstage: !_isLoading,
-            child: Center(
-              child: CupertinoActivityIndicator(),
-            ),
-          )
-        ],
-      ),
+        )
     );
   }
 
@@ -142,4 +145,17 @@ class _VideoPageState extends State<VideoPage> with AutomaticKeepAliveClientMixi
     }
   }
 
+  ///build AppBar.
+  Widget _buildAppBar() {
+    return AppBar(
+        elevation: 5,
+        centerTitle: true,
+        title: Text(
+            AppConst.video,
+            style: new TextStyle(
+              color: Colors.white,
+              fontSize: 18.0,
+            ))
+    );
+  }
 }

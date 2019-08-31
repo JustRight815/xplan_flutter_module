@@ -6,9 +6,9 @@ class AppConst  {
   //头条新闻
   static const String API_NEWS = "http://is.snssdk.com/api/news/feed/v62/";
 
-  static const String picture = '图片';
+  static const String picture = '首页';
   static const String video = '视频';
-  static const String toutiao = '头条';
+  static const String toutiao = '新闻';
   static const String setting = '设置';
   static const String NATIVE_CHANNEL = 'flutter_open_native';
   static const String NATIVE_OPEN_CAPTURE = 'flutter_open_capture';

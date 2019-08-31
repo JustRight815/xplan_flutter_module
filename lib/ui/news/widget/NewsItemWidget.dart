@@ -431,6 +431,22 @@ class NewsItemWidget extends StatelessWidget {
                     child: CacheImageUtil.cachedNetworkImage(
                         item.video_detail_info.detail_video_large_image.url)),
                 Positioned(
+                  top: 0.0,
+                  width: MediaQuery.of(context).size.width,
+                  child: Container(
+                    height: 70,
+                    width: MediaQuery.of(context).size.width,
+                    //从上到下 渐变透明
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [Color(0x99000000), Color(0x00000000)]
+                        )
+                    ),
+                  ),
+                ),
+                Positioned(
                   top: 6.0,
                   width: MediaQuery.of(context).size.width,
                   child: Container(

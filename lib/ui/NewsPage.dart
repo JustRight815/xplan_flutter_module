@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:xplan_flutter/constant/AppConst.dart';
 import 'news/NewsChannelPage.dart';
 
@@ -27,6 +28,13 @@ class _NewsPageState extends State<NewsPage> with AutomaticKeepAliveClientMixin,
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
+        appBar: PreferredSize(
+          preferredSize:Size.fromHeight(MediaQuery.of(context).size.height * 0.07),
+          child:SafeArea(
+            top: true,
+            child: Offstage(),
+          ),
+        ),
         body: Column(
           children: <Widget>[
             TabBar(

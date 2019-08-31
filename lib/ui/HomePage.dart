@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage>{
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: new Drawer(child: homeDrawer()),
-      appBar: _buildAppBar(),
+//      appBar: _buildAppBar(),
         bottomNavigationBar: BottomTabs(_pageController, _currentPageIndex),
       body: _buildBody()
     );

@@ -40,6 +40,7 @@ class _SettingPageState extends State<SettingPage>
     super.build(context);
     return Scaffold(
         backgroundColor: Colors.white,
+        appBar: _buildAppBar(),
         body: Stack(
           children: <Widget>[
             Offstage(
@@ -150,6 +151,20 @@ class _SettingPageState extends State<SettingPage>
       onTap: () {
         tap();
       },
+    );
+  }
+
+  ///build AppBar.
+  Widget _buildAppBar() {
+    return AppBar(
+        elevation: 5,
+        centerTitle: true,
+        title: Text(
+            AppConst.setting,
+            style: new TextStyle(
+              color: Colors.white,
+              fontSize: 18.0,
+            ))
     );
   }
 
