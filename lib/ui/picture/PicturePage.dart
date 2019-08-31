@@ -5,12 +5,13 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:xplan_flutter/common/widget/LoadStateWidget.dart';
 import 'package:xplan_flutter/common/widget/SmartRefreshWidget.dart';
 import 'package:xplan_flutter/constant/AppConst.dart';
+import 'package:xplan_flutter/ui/base/BaseWidget.dart';
 import 'package:xplan_flutter/ui/picture/model/common_model.dart';
 import 'package:xplan_flutter/ui/picture/widget/PictureGridItem.dart';
 import 'package:xplan_flutter/common/widget/CachedImageWidget.dart';
 import 'package:xplan_flutter/ui/picture/widget/PicMenuWidget.dart';
 
-class PicturePage extends StatefulWidget {
+class PicturePage extends BaseWidget {
   static const String ROUTER_NAME = '/';
 
   @override

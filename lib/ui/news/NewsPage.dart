@@ -16,45 +16,58 @@ class _NewsPageState extends State<NewsPage> with AutomaticKeepAliveClientMixin,
   bool get wantKeepAlive => true;
   Map<String,String> _selectChannels = Map();
   TabController tabController;
+  SystemUiOverlayStyle _currentStyle;
 
   @override
   void initState() {
     super.initState();
     _selectChannels = AppConst.getNewsChannel();
     tabController = TabController(length: _selectChannels.length, vsync: this);
+
+    _currentStyle = SystemUiOverlayStyle(
+      systemNavigationBarColor: Color(0xffffffff),
+      systemNavigationBarDividerColor: null,
+      statusBarColor: Color.fromARGB(0, 255, 255, 255),
+      systemNavigationBarIconBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.dark,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(
-        appBar: PreferredSize(
-          preferredSize:Size.fromHeight(MediaQuery.of(context).size.height * 0.07),
-          child:SafeArea(
-            top: true,
-            child: Offstage(),
+    return AnnotatedRegion(
+        value: _currentStyle,
+        child: Scaffold(
+          appBar: PreferredSize(
+            preferredSize:Size.fromHeight(MediaQuery.of(context).size.height * 0.07),
+            child:SafeArea(
+              top: true,
+              child: Offstage(),
+            ),
           ),
-        ),
-        body: Column(
-          children: <Widget>[
-            TabBar(
-              indicatorColor: Colors.blueAccent,
-              controller: tabController,
-              isScrollable: true,
-              labelColor: Colors.blue,
-              unselectedLabelColor: Colors.black,
-              labelStyle:TextStyle(color: Colors.blue,fontSize: 16),
-              unselectedLabelStyle:TextStyle(color: Colors.black,fontSize: 16),
-              tabs: parseTabs(),
-            ),
-            Expanded(
-              flex: 1,
-              child: TabBarView(
+          body: Column(
+            children: <Widget>[
+              TabBar(
+                indicatorColor: Colors.blueAccent,
                 controller: tabController,
-                children: parsePages(),
+                isScrollable: true,
+                labelColor: Colors.blue,
+                unselectedLabelColor: Colors.black,
+                labelStyle:TextStyle(color: Colors.blue,fontSize: 16),
+                unselectedLabelStyle:TextStyle(color: Colors.black,fontSize: 16),
+                tabs: parseTabs(),
               ),
-            ),
-          ],
+              Expanded(
+                flex: 1,
+                child: TabBarView(
+                  controller: tabController,
+                  children: parsePages(),
+                ),
+              ),
+            ],
+          )
         )
     );
   }
