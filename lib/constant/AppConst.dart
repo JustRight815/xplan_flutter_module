@@ -44,4 +44,5 @@ class AppConst  {
   }
 
   static final Color IMAGE_DEFAULT_BG = const Color(0xFFDDDDDD);
+  static final Color COLOR_APPBAR_BG = const Color(0xFF12b7f5);
 }
