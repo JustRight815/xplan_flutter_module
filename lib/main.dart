@@ -1,10 +1,20 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'ui/home/HomePage.dart';
 
-void main() => runApp(_widgetForRoute(window.defaultRouteName));
+void main() {
+  runApp(_widgetForRoute(window.defaultRouteName));
+  if (Platform.isAndroid) {
+    SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+    );
+    SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+  }
+}
 
 Widget _widgetForRoute(String route) {
   switch (route) {

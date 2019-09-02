@@ -157,7 +157,7 @@ class _SettingPageState extends State<SettingPage>
   ///build AppBar.
   Widget _buildAppBar() {
     return AppBar(
-        elevation: 5,
+        elevation: 0,
         centerTitle: true,
         title: Text(
             AppConst.setting,

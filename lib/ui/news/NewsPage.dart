@@ -39,36 +39,32 @@ class _NewsPageState extends State<NewsPage> with AutomaticKeepAliveClientMixin,
     super.build(context);
     return AnnotatedRegion(
         value: _currentStyle,
-        child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize:Size.fromHeight(MediaQuery.of(context).size.height * 0.07),
-            child:SafeArea(
-              top: true,
-              child: Offstage(),
-            ),
+        child: SafeArea(
+          top: true,
+          child: Scaffold(
+              body: Column(
+                children: <Widget>[
+                  TabBar(
+                    indicatorColor: Colors.blue,
+                    controller: tabController,
+                    isScrollable: true,
+                    labelColor: Colors.blue,
+                    unselectedLabelColor: Colors.black,
+                    labelStyle:TextStyle(color: Colors.blue,fontSize: 16),
+                    unselectedLabelStyle:TextStyle(color: Colors.black,fontSize: 16),
+                    tabs: parseTabs(),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: TabBarView(
+                      controller: tabController,
+                      children: parsePages(),
+                    ),
+                  ),
+                ],
+              )
           ),
-          body: Column(
-            children: <Widget>[
-              TabBar(
-                indicatorColor: Colors.blueAccent,
-                controller: tabController,
-                isScrollable: true,
-                labelColor: Colors.blue,
-                unselectedLabelColor: Colors.black,
-                labelStyle:TextStyle(color: Colors.blue,fontSize: 16),
-                unselectedLabelStyle:TextStyle(color: Colors.black,fontSize: 16),
-                tabs: parseTabs(),
-              ),
-              Expanded(
-                flex: 1,
-                child: TabBarView(
-                  controller: tabController,
-                  children: parsePages(),
-                ),
-              ),
-            ],
-          )
-        )
+        ),
     );
   }
 
