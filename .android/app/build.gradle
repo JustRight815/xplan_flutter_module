@@ -16,30 +16,13 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
-        debug {
-            //混淆
-            minifyEnabled false
-            shrinkResources false //前提是minifyEnabled为true
-            zipAlignEnabled false
-            jniDebuggable true
-            debuggable true
-            ndk {
-                //debug时支持在x86模拟器上运行
-                abiFilters  "armeabi-v7a",'x86'// ,'armeabi-v7a' , 'arm64-v8a', 'x86', 'x86_64'
-            }
-            signingConfig signingConfigs.debug
-        }
         profile {
             initWith debug
         }
         release {
-            ndk {
-                abiFilters  "armeabi-v7a"// ,'armeabi-v7a' , 'arm64-v8a', 'x86', 'x86_64'
-            }
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
@@ -53,7 +36,4 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-    testImplementation 'junit:junit:4.12'
 }
